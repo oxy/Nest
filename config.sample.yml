@@ -1,0 +1,11 @@
+tokens:
+  discord: ""
+
+settings:
+  owners:
+    - 181353804266995713
+  database: nest
+  prefixes:
+    user: nest!
+    mod: nest@
+    owner: nest#
