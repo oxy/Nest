@@ -9,6 +9,7 @@ import aiohttp
 import discord
 from discord.ext import commands
 from discord.ext.commands.view import StringView
+import rethinkdb as r
 
 from core import db, i18n
 
@@ -29,11 +30,13 @@ class NestClient(commands.AutoShardedBot):
     i18n: core.i18n.I18n
         Internationalization functions for the bot.
     """
-    def __init__(self, settings, connection, *args, **kwargs):
+    def __init__(self, settings, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
-        self.session = aiohttp.ClientSession(loop=self.loop)
 
-        self.database = db.DBWrapper(settings.get('database'), connection)
+        # Initialize instances that need the asyncio loop
+        dbconn = self.loop.run_until_complete(r.connect())
+        self.database = db.DBWrapper(settings.get('database'), dbconn)
+        self.session = aiohttp.ClientSession(loop=self.loop)
 
         self._logger = logging.getLogger('NestClient')
         self.owners = settings.get('owners')
