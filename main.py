@@ -2,11 +2,9 @@
 Load and start the Nest client.
 '''
 
-import asyncio
 import os
 import logging
 
-import rethinkdb as r
 import yaml
 
 from core import utils, client
