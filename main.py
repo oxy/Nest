@@ -43,10 +43,7 @@ def main():
 
     settings = {**DEFAULTS, **config['settings']}
 
-    bot = client.NestClient(settings, connection)
-
-    r.set_loop_type('asyncio')
-    connection = bot.loop.run_until_complete(r.connect())
+    bot = client.NestClient(settings)
 
     for module in os.listdir('modules'):
         # Ignore hidden directories
