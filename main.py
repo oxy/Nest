@@ -7,7 +7,7 @@ import logging
 
 import yaml
 
-from core import utils, client
+from nest import client, helpers
 
 DEFAULTS = {'prefix': {'user': 'nest$', 'mod': 'nest@', 'owner': 'nest#'},
             'database': 'nest'}
@@ -32,7 +32,7 @@ def main():
                 config['tokens'][key[6:]] = val
             else:
                 keys = key.split('_')
-                pointer = utils.dictwalk(
+                pointer = helpers.dictwalk(
                     dictionary=config['settings'],
                     tree=keys[:-1],
                     fill=True)

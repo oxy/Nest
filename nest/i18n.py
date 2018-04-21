@@ -5,7 +5,7 @@ import json
 import logging
 import os
 
-from core.utils import dictwalk
+from nest.helpers import dictwalk
 
 class I18n:
     '''Internationalization functions for Nest.
@@ -17,7 +17,7 @@ class I18n:
     '''
     def __init__(self, locale: str):
         self._i18n_data = {}
-        self._logger = logging.getLogger('core.i18n')
+        self._logger = logging.getLogger('nest.i18n')
         self.locale = locale
 
     def load_module(self, module):

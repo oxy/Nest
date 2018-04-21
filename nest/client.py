@@ -11,7 +11,7 @@ from discord.ext import commands
 from discord.ext.commands.view import StringView
 import rethinkdb as r
 
-from core import db, i18n
+from nest import db, i18n
 
 
 class NestClient(commands.AutoShardedBot):
@@ -19,7 +19,7 @@ class NestClient(commands.AutoShardedBot):
 
     Attributes
     ----------
-    database: core.db.DBWrapper
+    database: nest.db.DBWrapper
         The wrapper for the database.
     session: aiohttp.ClientSession
         aiohttp session to use for making requests.
@@ -27,7 +27,7 @@ class NestClient(commands.AutoShardedBot):
         List of owners of the bot.
     default_prefix: dict
         Default prefixes for each category.
-    i18n: core.i18n.I18n
+    i18n: nest.i18n.I18n
         Internationalization functions for the bot.
     """
     def __init__(self, settings, *args, **kwargs):
