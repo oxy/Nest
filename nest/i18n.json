@@ -2,24 +2,28 @@
     "en_US": {
         "names": {
             "en": "English (United States)",
-            "fr": "Anglais (Les États-Unis)"
+            "fr": "Anglais (Les États-Unis)",
+            "hi": "अंग्रेज़ी (अमेरिका)"
+        }
+    },
+    "fr_FR": {
+        "names": {
+            "en": "French (France)",
+            "fr": "Français (France)",
+            "hi": "फ्रेंच (फ्रांस)"
         }
     },
     "fr_CA": {
         "names": {
             "en": "French (Canada)",
-            "fr": "Français (Canade)"
-        }
-    },
-    "ja_JP": { 
-        "names": {
-            "en": "Japanese (Japan)",
-            "ja": "日本語 (日本)"
+            "fr": "Français (Canada)",
+            "hi": "फ्रेंच (कनाडा)"
         }
     },
     "hi_IN": {
         "names": {
             "en": "Hindi (India)",
+            "fr": "Hindi (Inde)",
             "hi": "हिंदी (भारत)"
         }
     }
