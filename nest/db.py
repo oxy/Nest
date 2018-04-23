@@ -42,11 +42,11 @@ class DBWrapper:
 
     def __init__(self, database: str,
                  connection: r.Connection):
-        self._connection = connection
+        self.connection = connection
         self.database = r.db(database)
 
     @db_method
-    async def read(self, table, itemid: str, item=None):
+    async def read(self, *, table, itemid: str, item=None):
         '''|coro|
 
         Read entry from database and return induvidual item.
@@ -61,7 +61,7 @@ class DBWrapper:
             Name of the item to return, if any.
         '''
         query = table.filter(r.row['id'] == itemid).limit(1)
-        cursor = query.run(self._connection)
+        cursor = await query.run(self.connection)
         try:
             document = await cursor.next()
             if item is None:
@@ -73,7 +73,7 @@ class DBWrapper:
         return data
 
     @db_method
-    async def write(self, table, itemid: str, item, data):
+    async def write(self, *, table, itemid: str, item, data):
         '''|coro|
 
         Write data for an item to a database.
@@ -89,12 +89,12 @@ class DBWrapper:
         data:
             Data to write to the item.
         '''
-        if await self.read(table, itemid) is not None:
+        if await self.read(table=table, itemid=itemid) is not None:
             row = table.filter(r.row['id'] == itemid).limit(1)
-            await row.update({item: data}).run(self._connection)
+            await row.update({item: data}).run(self.connection)
         else:
             query = table.insert([{'id': itemid, item: data}])
-            await query.run(self._connection)
+            await query.run(self.connection)
 
 
 class ItemWrapper:
