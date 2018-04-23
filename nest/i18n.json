@@ -1,0 +1,26 @@
+{
+    "en_US": {
+        "names": {
+            "en": "English (United States)",
+            "fr": "Anglais (Les États-Unis)"
+        }
+    },
+    "fr_CA": {
+        "names": {
+            "en": "French (Canada)",
+            "fr": "Français (Canade)"
+        }
+    },
+    "ja_JP": { 
+        "names": {
+            "en": "Japanese (Japan)",
+            "ja": "日本語 (日本)"
+        }
+    },
+    "hi_IN": {
+        "names": {
+            "en": "Hindi (India)",
+            "hi": "हिंदी (भारत)"
+        }
+    }
+}
