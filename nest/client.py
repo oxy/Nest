@@ -107,7 +107,7 @@ class NestClient(commands.AutoShardedBot):
             itemid=message.author.id,
             item='locale')
 
-        ctx.locale = locale
+        ctx.locale = locale if locale else self.i18n.locale
 
         if ctx.command:
             ctx._ = functools.partial(
