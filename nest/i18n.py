@@ -71,16 +71,16 @@ class I18n:
             Module to load from.
             Must be a valid module located in the modules/ directory.
         '''
-        path = f'modules/{module}/i18n'
+        path = os.path.join('modules', module, 'i18n')
 
         if not os.path.exists(path):
             return
 
-        self._i18n_data[module] = {}
-
         for filename in os.listdir(path):
             if not filename.endswith('.json'):
+                self._logger.warning(f'Ignoring {filename}!')
                 continue
+
             locale = filename[:-5]
 
             if locale not in self._i18n_data:
@@ -90,7 +90,7 @@ class I18n:
             with open(f'{path}/{filename}') as file:
                 self._i18n_data[locale].update(json.load(file))
 
-    def getstr(self, string: str, locale: str, cog: str):
+    def getstr(self, string: str, *, locale: str, cog: str):
         '''Get a localized string.
 
         Parameters
