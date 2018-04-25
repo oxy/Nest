@@ -2,16 +2,19 @@
 Provides the Nest client class.
 '''
 
+import asyncio
 import functools
 import logging
+from typing import Callable, Dict, List, Optional, Union
 
 import aiohttp
+import asyncpg
 import discord
+from discord import User, Message
 from discord.ext import commands
 from discord.ext.commands.view import StringView
-import rethinkdb as r
 
-from nest import db, i18n
+from nest import i18n
 
 
 class NestClient(commands.AutoShardedBot):
@@ -25,22 +28,29 @@ class NestClient(commands.AutoShardedBot):
         aiohttp session to use for making requests.
     owners: list
         List of owners of the bot.
-    default_prefix: dict
-        Default prefixes for each category.
     i18n: nest.i18n.I18n
         Internationalization functions for the bot.
     """
-    def __init__(self, settings, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+    def __init__(
+            self, *,
+            database: Optional[str] = None,
+            locale: Union[str, Callable[[NestClient, User], str]],
+            prefix: Union[Dict[str, str], Callable[[NestClient, Message], Dict[str, str]]],
+            owners: List[int]):
 
-        # Initialize instances that need the asyncio loop
-        dbconn = self.loop.run_until_complete(r.connect())
-        self.database = db.DBWrapper(settings.get('database'), dbconn)
+        super().__init__(prefix)
+        self._logger = logging.getLogger('NestClient')
+
+        if database:
+            self.database = self.loop.run_until_complete(asyncpg.create_pool(
+                database=database, loop=self.loop))
+        else:
+            self.database = None
+
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-        self._logger = logging.getLogger('NestClient')
-        self.owners = settings.get('owners')
-        self.default_prefix = settings.get('prefixes')
+        self.locale = locale
+        self.owners = owners
         self.i18n = i18n.I18n(locale='en_US')
 
     async def on_ready(self):
@@ -50,6 +60,69 @@ class NestClient(commands.AutoShardedBot):
 
         # Set the game.
         await self.change_presence(activity=discord.Activity(name="with code"))
+
+    async def get_prefix(self, message: discord.Message):
+        """|coro|
+
+        Retrieves the prefix the bot is listening to
+        with the message as a context.
+
+        Parameters
+        -----------
+        message: :class:`discord.Message`
+            The message context to get the prefix of.
+
+        Raises
+        --------
+        :exc:`.ClientException`
+            The prefix was invalid. This could be if the prefix
+            function returned None, the prefix list returned no
+            elements that aren't None, or the prefix string is
+            empty.
+
+        Returns
+        --------
+        Dict[str, str]
+            A prefix the bot is listening for in each category.
+        """
+        prefix = ret = self.command_prefix
+        if callable(prefix):
+            ret = prefix(self, message)
+            if asyncio.iscoroutine(ret):
+                ret = await ret
+
+        if ret and isinstance(ret, dict):
+            return ret
+        else:
+            raise discord.ClientException(
+                'Invalid prefix mapping (could be empty or not a dict)')
+
+    async def get_locale(self, user: discord.User):
+        """|coro|
+
+        Retrieves the locale of a user to respond with.
+
+        Parameters
+        -----------
+        user: :class:`discord.User`
+            The message context to get the prefix of.
+
+        Returns
+        -------
+        str:
+            Locale to use in responses.
+        """
+        locale = ret = self.locale
+        if callable(locale):
+            ret = locale(self, user)
+            if asyncio.iscoroutine(ret):
+                ret = await ret
+
+        if ret and isinstance(ret, dict):
+            return ret
+        else:
+            raise discord.ClientException(
+                'Invalid prefix mapping (could be empty or not a dict)')
 
     async def get_context(
             self, message: discord.Message, *, cls=commands.Context):
@@ -83,15 +156,7 @@ class NestClient(commands.AutoShardedBot):
         ctx = cls(prefix=None, view=view,
                   bot=self, message=message)
 
-        data = await self.database.read(
-            table='guilds',
-            itemid=message.guild.id,
-            item='prefixes')
-
-        if data is None:
-            data = {}
-        prefixes = {**self.default_prefix, **data}
-
+        prefixes = await self.get_prefix(message)
         for category, prefix in prefixes.items():
             if view.skip_string(prefix):
                 invoker = view.get_word()
@@ -102,12 +167,7 @@ class NestClient(commands.AutoShardedBot):
                     ctx.prefix = prefix
                 break
 
-        locale = await self.database.read(
-            table='users',
-            itemid=message.author.id,
-            item='locale')
-
-        ctx.locale = locale if locale else self.i18n.locale
+        locale = await self.get_locale(message.author)
 
         if ctx.command:
             ctx._ = functools.partial(
