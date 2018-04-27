@@ -9,12 +9,12 @@ async def initialize(database):
     conn = await asyncpg.connect(database=database)
     # TODO: Read configuration data from modules.
     await conn.executemany('''
-        CREATE TABLE prefixes(
+        CREATE TABLE prefix(
             id numeric(21, 0) PRIMARY KEY,
             user text,
             mod text
         );
-        CREATE TABLE locales(
+        CREATE TABLE locale(
             id numeric(21, 0) PRIMARY KEY,
             locale text
         );
