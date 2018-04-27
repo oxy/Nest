@@ -115,3 +115,7 @@ class I18n:
     def lang(self):
         '''Default language.'''
         return self.locale[:2]
+
+    def is_locale(self, locale: str):
+        '''Check if given locale is valid.'''
+        return locale in self._i18n_data.keys()
