@@ -118,11 +118,11 @@ class NestClient(commands.AutoShardedBot):
             if asyncio.iscoroutine(ret):
                 ret = await ret
 
-        if ret and isinstance(ret, dict):
+        if ret and isinstance(ret, str):
             return ret
         else:
             raise discord.ClientException(
-                'Invalid prefix mapping (could be empty or not a dict)')
+                'Invalid locale (could be non-str)')
 
     async def get_context(
             self, message: discord.Message, *, cls=commands.Context):
