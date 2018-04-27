@@ -30,26 +30,3 @@ def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
                 raise ValueError(f'{k} not a valid key.')
         item = item[k]
     return item
-
-
-def cog(category: str):
-    '''
-    Returns a metaclass to derive a cog from,
-    with an __init__ function that declares the category.
-
-    Arguments
-    ---------
-    category: str
-        Category of the cog.
-    '''
-
-    # This cog has no functions beyond __init__ on purpose too
-    # pylint: disable=R0903
-    class Cog:
-        '''
-        Base class to derive a cog from.
-        '''
-        def __init__(self):
-            self.category = category
-
-    return Cog

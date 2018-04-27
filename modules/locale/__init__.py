@@ -3,10 +3,11 @@ Set and display user locales.
 '''
 
 from discord.ext import commands
-from nest import helpers
 
-class Locale(helpers.cog('user')):
+class Locale():
     '''Locale cog.'''
+    category = 'user'
+
     @commands.group()
     async def locale(self, ctx) -> None:
         '''List locales and get current locale.'''
@@ -27,11 +28,11 @@ class Locale(helpers.cog('user')):
     async def set_locale(self, ctx, locale: str) -> None:
         '''Set a locale.'''
         # TODO: Verify if locale is valid.
-        await ctx.bot.database.write(
-            table='users',
-            itemid=ctx.author.id,
-            item='locale',
-            data=locale)
+        async with ctx.bot.database.acquire() as conn:
+            await conn.execute('''
+                INSERT INTO locale (id, locale) VALUES ($1, $2) ON CONFLICT DO UPDATE
+            ''', ctx.user.id, locale)
+
         await ctx.send(ctx._('locale_success', locale=locale).format(locale))
 
 def setup(bot):
