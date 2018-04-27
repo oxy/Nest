@@ -1,23 +1,25 @@
 '''
-Module to initialize the database with the required data.
+Module to initialize the database with the required tables.
 '''
 
-import rethinkdb as r
+import asyncio
+import asyncpg
 
-def initialize(database='nest'):
-    '''
-    Initialize a database with required tables.
-    Creates a database with a 'guilds' and 'users' table.
-
-    Parameters
-    ----------
-    database: str
-        Name of the database.
-    '''
-    conn = r.connect()
-    r.db_create(database).run(conn)
-    r.db('nest').table_create('guilds').run(conn)
-    r.db('nest').table_create('users').run(conn)
+async def initialize(database):
+    conn = await asyncpg.connect(database=database)
+    # TODO: Read configuration data from modules.
+    await conn.executemany('''
+        CREATE TABLE prefixes(
+            id numeric(21, 0) PRIMARY KEY,
+            user text,
+            mod text
+        );
+        CREATE TABLE locales(
+            id numeric(21, 0) PRIMARY KEY,
+            locale text
+        );
+    ''')
 
 if __name__ == '__main__':
-    initialize()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(initialize('nest'))
