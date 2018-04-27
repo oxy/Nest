@@ -8,7 +8,6 @@ import logging
 from typing import Callable, Dict, List, Optional, Union
 
 import aiohttp
-import asyncpg
 import discord
 from discord import User, Message
 from discord.ext import commands
@@ -34,14 +33,15 @@ class NestClient(commands.AutoShardedBot):
     def __init__(
             self, *,
             database: Optional[str] = None,
-            locale: Union[str, Callable[[NestClient, User], str]],
-            prefix: Union[Dict[str, str], Callable[[NestClient, Message], Dict[str, str]]],
+            locale: Union[str, Callable[['NestClient', User], str]],
+            prefix: Union[Dict[str, str], Callable[['NestClient', Message], Dict[str, str]]],
             owners: List[int]):
 
         super().__init__(prefix)
         self._logger = logging.getLogger('NestClient')
 
         if database:
+            import asyncpg
             self.database = self.loop.run_until_complete(asyncpg.create_pool(
                 database=database, loop=self.loop))
         else:
@@ -206,3 +206,6 @@ class NestClient(commands.AutoShardedBot):
 
         self.load_extension(f'modules.{name}')
         self.i18n.load_module(name)
+
+    def load_extension(self, name: str):
+        super()
