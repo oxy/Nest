@@ -34,8 +34,9 @@ class Locale():
 
         async with ctx.bot.database.acquire() as conn:
             await conn.execute('''
-                INSERT INTO locale (id, locale) VALUES ($1, $2) ON CONFLICT DO UPDATE
-            ''', ctx.user.id, locale)
+                INSERT INTO locale (id, locale) VALUES ($1, $2) ON CONFLICT (id)
+                DO UPDATE SET (id, locale) = ($1, $2);
+            ''', ctx.author.id, locale)
 
         await ctx.send(ctx._('locale_success', locale=locale).format(locale))
 
