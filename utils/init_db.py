@@ -11,14 +11,14 @@ async def initialize(database):
     await conn.executemany('''
         CREATE TABLE prefix(
             id numeric(21, 0) PRIMARY KEY,
-            user text,
-            mod text
+            user_prefix text,
+            mod_prefix text
         );
         CREATE TABLE locale(
             id numeric(21, 0) PRIMARY KEY,
             locale text
         );
-    ''')
+    ''', None)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

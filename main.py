@@ -39,11 +39,12 @@ def gen_prefix_callable(default_prefixes: dict):
         if message.guild:
             async with bot.database.acquire() as conn:
                 prefixes = await conn.fetchrow(
-                    '''SELECT (user, mod) FROM prefix WHERE id=$1''',
+                    '''SELECT (user_prefix, mod_prefix) FROM prefix WHERE id=$1''',
                     message.guild.id)
 
             if prefixes is not None:
-                return {**default_prefixes, **prefixes}
+                return {**default_prefixes, 
+                        **{k.split('_')[0]: v for k,v in prefixes.items()}}
         else:
             return default_prefixes
     return prefix
