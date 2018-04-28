@@ -5,16 +5,14 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
-from typing import Callable, Dict, List, Optional, Union
+from typing import List, Optional
 
 import aiohttp
 import discord
-from discord import User, Message
 from discord.ext import commands
 from discord.ext.commands.view import StringView
 
-from nest import i18n
-
+from nest import i18n, exceptions
 
 class NestClient(commands.AutoShardedBot):
     """Main client for Nest.
@@ -30,20 +28,18 @@ class NestClient(commands.AutoShardedBot):
     i18n: nest.i18n.I18n
         Internationalization functions for the bot.
     """
-    def __init__(
-            self, *,
-            database: Optional[str] = None,
-            locale: Union[str, Callable[['NestClient', User], str]],
-            prefix: Union[Dict[str, str], Callable[['NestClient', Message], Dict[str, str]]],
-            owners: List[int]):
-
+    def __init__(self, *, database: Optional[str] = None, locale: str,
+                 prefix: str, owners: List[int]):
         super().__init__(prefix)
         self._logger = logging.getLogger('NestClient')
+        self.features = set()
+        self.providers = {}
 
         if database:
             import asyncpg
             self.database = self.loop.run_until_complete(asyncpg.create_pool(
                 database=database, loop=self.loop))
+            self.features.add('database')
         else:
             self.database = None
 
@@ -85,17 +81,17 @@ class NestClient(commands.AutoShardedBot):
         Dict[str, str]
             A prefix the bot is listening for in each category.
         """
-        prefix = ret = self.command_prefix
-        if callable(prefix):
-            ret = prefix(self, message)
+        prefixes = self.command_prefix
+        provider = self.providers.get('prefix', None)
+
+        if provider:
+            ret = provider(self, message)
             if asyncio.iscoroutine(ret):
                 ret = await ret
+            if ret is not None:
+                prefixes.update(ret)
 
-        if ret and isinstance(ret, dict):
-            return ret
-        else:
-            raise discord.ClientException(
-                'Invalid prefix mapping (could be empty or not a dict)')
+        return prefixes
 
     async def get_locale(self, user: discord.User):
         """|coro|
@@ -112,17 +108,13 @@ class NestClient(commands.AutoShardedBot):
         str:
             Locale to use in responses.
         """
-        locale = ret = self.locale
-        if callable(locale):
-            ret = locale(self, user)
+        provider = self.providers.get('locale', None)
+        if provider:
+            ret = provider(self, user)
             if asyncio.iscoroutine(ret):
                 ret = await ret
 
-        if ret and isinstance(ret, str):
-            return ret
-        else:
-            raise discord.ClientException(
-                'Invalid locale (could be non-str)')
+        return ret if ret else self.locale
 
     async def get_context(
             self, message: discord.Message, *, cls=commands.Context):
@@ -208,5 +200,64 @@ class NestClient(commands.AutoShardedBot):
         self.load_extension(f'modules.{name}')
         self.i18n.load_module(name)
 
-    def load_extension(self, name: str):
-        super()
+    def add_cog(self, cog):
+        '''Adds a "cog" to the bot.
+
+        A cog is a class that has its own event listeners and commands.
+
+        They are meant as a way to organize multiple relevant commands
+        into a singular class that shares some state or no state at all.
+
+        The cog can have a ``requires`` list to list out any required
+        features, and a ``provides`` dict that can provide functions to the bot.
+
+        The cog can also have a ``__global_check`` member function that allows
+        you to define a global check. See :meth:`.check` for more info. If
+        the name is ``__global_check_once`` then it's equivalent to the
+        :meth:`.check_once` decorator.
+
+        More information will be documented soon.
+
+        Parameters
+        -----------
+        cog
+            The cog to register to the bot.
+        '''
+        required = getattr(cog, 'requires', [])
+        unavailable = set(required) - self.features
+        if unavailable:
+            raise exceptions.MissingFeatures(cog, unavailable)
+        super().add_cog(cog)
+
+        provides = getattr(cog, 'provides', None)
+        if provides:
+            self.providers.update(cog.provides)
+
+    def remove_cog(self, name):
+        """Removes a cog from the bot.
+
+        All registered commands, event listeners and providers that the
+        cog has registered will be removed as well.
+
+        If no cog is found then this method has no effect.
+
+        If the cog defines a special member function named ``__unload``
+        then it is called when removal has completed. This function
+        **cannot** be a coroutine. It must be a regular function.
+
+        Parameters
+        -----------
+        name : str
+            The name of the cog to remove.
+        """
+
+        cog = self.cogs.pop(name, None)
+        if not cog:
+            return
+
+        provides = getattr(cog, 'provides', {})
+        for key, provider in provides.items():
+            assert self.providers[key] is provider
+            self.providers.pop(key)
+
+        super().remove_cog(name)

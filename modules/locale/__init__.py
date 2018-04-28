@@ -2,11 +2,37 @@
 Set and display user locales.
 '''
 
+import discord
 from discord.ext import commands
+
+async def get_locale(bot, user: discord.User) -> str:
+    '''|coro|
+
+    Returns a valid locale when given a user.
+
+    Parameters
+    ----------
+    bot: client.NestClient
+        The bot instance (used for acquiring a database connection).
+    message: discord.Message
+        The user to return a locale for.
+
+    Returns
+    -------
+    str
+        Locale of the user.
+    '''
+    async with bot.database.acquire() as conn:
+        locale = await conn.fetchval(
+            'SELECT locale FROM locale WHERE id=$1''', user.id)
+    return locale
+
 
 class Locale():
     '''Locale cog.'''
     category = 'user'
+    requires = ['database']
+    provides = {'locale': get_locale}
 
     @commands.group()
     async def locale(self, ctx) -> None:

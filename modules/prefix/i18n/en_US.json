@@ -1,0 +1,6 @@
+{
+    "GuildPrefix": {
+        "invalid_category": "Invalid category {}. Expecting one of `user`, `mod`.",
+        "set_success": "Successfully set prefix for {category} to {prefix}."
+    }
+}
