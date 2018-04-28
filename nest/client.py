@@ -156,8 +156,9 @@ class NestClient(commands.AutoShardedBot):
         ctx = cls(prefix=None, view=view,
                   bot=self, message=message)
 
-        prefixes = await self.get_prefix(message)
-        for category, prefix in prefixes.items():
+        ctx.prefixes = await self.get_prefix(message)
+
+        for category, prefix in ctx.prefixes.items():
             if view.skip_string(prefix):
                 invoker = view.get_word()
                 command = self.all_commands.get(invoker)
@@ -167,11 +168,11 @@ class NestClient(commands.AutoShardedBot):
                     ctx.prefix = prefix
                 break
 
-        locale = await self.get_locale(message.author)
+        ctx.locale = await self.get_locale(message.author)
 
         if ctx.command:
             ctx._ = functools.partial(
-                self.i18n.getstr, locale=locale,
+                self.i18n.getstr, locale=ctx.locale,
                 cog=type(ctx.command.instance).__name__)
 
         return ctx
