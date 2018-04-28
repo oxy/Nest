@@ -27,7 +27,11 @@ class Locale():
     @locale.command(name='set')
     async def set_locale(self, ctx, locale: str) -> None:
         '''Set a locale.'''
-        # TODO: Verify if locale is valid.
+
+        if not ctx.bot.i18n.is_locale(locale):
+            await ctx.send(ctx._('locale_invalid').format(locale))
+            return
+
         async with ctx.bot.database.acquire() as conn:
             await conn.execute('''
                 INSERT INTO locale (id, locale) VALUES ($1, $2) ON CONFLICT DO UPDATE

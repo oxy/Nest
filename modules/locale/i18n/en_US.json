@@ -1,6 +1,7 @@
 {   
     "Locale": {
         "locale": "Your locale is **{}**.",
-        "locale_success": "Your locale is now **{}**."
+        "locale_success": "Your locale is now **{}**.",
+        "locale_invalid": "**{}** is not a valid locale."
     }
 }
