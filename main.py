@@ -7,7 +7,7 @@ import logging
 
 import yaml
 
-from nest import client, helpers
+from nest import client, helpers, exceptions
 
 DEFAULTS = {'prefix': {'user': 'nest$', 'mod': 'nest@', 'owner': 'nest#'},
             'locale': 'en_US'}
@@ -56,7 +56,11 @@ def main():
     for module in os.listdir('modules'):
         # Ignore hidden directories
         if not module.startswith('.'):
-            bot.load_module(module)
+            try:
+                bot.load_module(module)
+            except exceptions.MissingFeatures as exc:
+                if settings.get('database', None) and exc.features != {'database'}:
+                    raise
 
     bot.run(config['tokens']['discord'])
 
