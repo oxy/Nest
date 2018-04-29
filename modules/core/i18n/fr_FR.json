@@ -1,0 +1,5 @@
+{
+    "CoreCommands": {
+        "ping_response": "Je suis vivant! Temps de réponse: {}ms."
+    }
+}
