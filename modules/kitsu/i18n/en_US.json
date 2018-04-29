@@ -1,6 +1,8 @@
 {
-    "rating": "Rating",
-    "status": "Status",
-    "startdate": "Started",
-    "enddate": "Finished"
+    "KitsuWrapper": {
+        "rating": "Rating",
+        "status": "Status",
+        "startdate": "Started",
+        "enddate": "Finished"
+    }
 }
