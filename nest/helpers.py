@@ -27,6 +27,6 @@ def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
             if fill:
                 item[k] = {}
             else:
-                raise ValueError(f'{k} not a valid key.')
+                raise KeyError(f'{k} not a valid key.')
         item = item[k]
     return item

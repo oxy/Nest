@@ -104,10 +104,10 @@ class I18n:
         '''
         try:
             item = dictwalk(self._i18n_data, [locale, cog, string])
-        except ValueError:
+        except KeyError:
             try:
                 item = dictwalk(self._i18n_data, [self.locale, cog, string])
-            except ValueError:
+            except KeyError:
                 item = string
         return item
 
