@@ -84,6 +84,7 @@ class NestClient(commands.AutoShardedBot):
         prefixes = self.command_prefix
         provider = self.providers.get('prefix', None)
 
+        ret = None
         if provider:
             ret = provider(self, message)
             if asyncio.iscoroutine(ret):
@@ -109,6 +110,8 @@ class NestClient(commands.AutoShardedBot):
             Locale to use in responses.
         """
         provider = self.providers.get('locale', None)
+
+        ret = None
         if provider:
             ret = provider(self, user)
             if asyncio.iscoroutine(ret):
