@@ -3,27 +3,24 @@ Module to initialize the database with the required tables.
 '''
 
 import asyncio
+import os
 import asyncpg
 
-QUERIES = ['''
-    CREATE TABLE prefix(
-        id numeric(21, 0) PRIMARY KEY,
-        user_prefix text,
-        mod_prefix text
-    )
-    ''',
-    '''
-    CREATE TABLE locale(
-        id numeric(21, 0) PRIMARY KEY,
-        locale text
-    );
-    ''']
-
 async def initialize(database):
+    queries = []
+    
+    # Fetch all queries.
+    for module in os.listdir("modules"):
+        path = os.path.join("modules", module, "init.pgsql")
+        if not module.startswith(".") and os.path.exists(path):
+            with open(path) as query:
+                queries.append(query.read())
+
+    # Execute each query.
     conn = await asyncpg.connect(database=database)
-    # TODO: Read configuration data from modules.
-    for query in QUERIES:
+    for query in queries:
         await conn.execute(query)
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
