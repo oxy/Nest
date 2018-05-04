@@ -9,7 +9,7 @@ Nest is the repo for a Discord Bot named Birb, Birb was designed to be an "every
 
 # Setup
 
-Setup RethinkDB and Python 3.6 and:
+Setup PostgreSQL and Python 3.6 and:
 
 ```shell
 pip install -r ./requirements.txt # Install requirements
