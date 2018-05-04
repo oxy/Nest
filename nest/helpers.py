@@ -1,8 +1,9 @@
-'''
+"""
 Miscallaneous utils separate from the rest of Nest's core.
-'''
+"""
 
 from typing import List
+
 
 def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
     """Walk down a dictionary tree and return an element.
@@ -27,6 +28,6 @@ def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
             if fill:
                 item[k] = {}
             else:
-                raise KeyError(f'{k} not a valid key.')
+                raise KeyError(f"{k} not a valid key.")
         item = item[k]
     return item

@@ -1,14 +1,15 @@
-'''
+"""
 Module to initialize the database with the required tables.
-'''
+"""
 
 import asyncio
 import os
 import asyncpg
 
+
 async def initialize(database):
     queries = []
-    
+
     # Fetch all queries.
     for module in os.listdir("modules"):
         path = os.path.join("modules", module, "init.pgsql")
@@ -22,6 +23,6 @@ async def initialize(database):
         await conn.execute(query)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(initialize('nest'))
+    loop.run_until_complete(initialize("nest"))

@@ -1,6 +1,6 @@
-'''
+"""
 Provides the Nest client class.
-'''
+"""
 
 import asyncio
 import functools
@@ -13,6 +13,7 @@ from discord.ext import commands
 from discord.ext.commands.view import StringView
 
 from nest import i18n, exceptions
+
 
 class NestClient(commands.AutoShardedBot):
     """Main client for Nest.
@@ -28,18 +29,27 @@ class NestClient(commands.AutoShardedBot):
     i18n: nest.i18n.I18n
         Internationalization functions for the bot.
     """
-    def __init__(self, *, database: Optional[str] = None, locale: str,
-                 prefix: str, owners: List[int]):
+
+    def __init__(
+        self,
+        *,
+        database: Optional[str] = None,
+        locale: str,
+        prefix: str,
+        owners: List[int],
+    ):
         super().__init__(prefix)
-        self._logger = logging.getLogger('NestClient')
+        self._logger = logging.getLogger("NestClient")
         self.features = set()
         self.providers = {}
 
         if database:
             import asyncpg
-            self.database = self.loop.run_until_complete(asyncpg.create_pool(
-                database=database, loop=self.loop))
-            self.features.add('database')
+
+            self.database = self.loop.run_until_complete(
+                asyncpg.create_pool(database=database, loop=self.loop)
+            )
+            self.features.add("database")
         else:
             self.database = None
 
@@ -47,12 +57,13 @@ class NestClient(commands.AutoShardedBot):
 
         self.locale = locale
         self.owners = owners
-        self.i18n = i18n.I18n(locale='en_US')
+        self.i18n = i18n.I18n(locale="en_US")
 
     async def on_ready(self):
-        '''Log successful login event'''
+        """Log successful login event"""
         self._logger.info(
-            f"Logged in as {self.user.name}. ID: {str(self.user.id)}")
+            f"Logged in as {self.user.name}. ID: {str(self.user.id)}"
+        )
 
         # Set the game.
         await self.change_presence(activity=discord.Activity(name="with code"))
@@ -82,7 +93,7 @@ class NestClient(commands.AutoShardedBot):
             A prefix the bot is listening for in each category.
         """
         prefixes = self.command_prefix
-        provider = self.providers.get('prefix', None)
+        provider = self.providers.get("prefix", None)
 
         ret = None
         if provider:
@@ -109,7 +120,7 @@ class NestClient(commands.AutoShardedBot):
         str:
             Locale to use in responses.
         """
-        provider = self.providers.get('locale', None)
+        provider = self.providers.get("locale", None)
 
         ret = None
         if provider:
@@ -120,7 +131,8 @@ class NestClient(commands.AutoShardedBot):
         return ret if ret else self.locale
 
     async def get_context(
-            self, message: discord.Message, *, cls=commands.Context):
+        self, message: discord.Message, *, cls=commands.Context
+    ):
         """|coro|
 
         Returns the invocation context from the message.
@@ -148,8 +160,7 @@ class NestClient(commands.AutoShardedBot):
         """
 
         view = StringView(message.content)
-        ctx = cls(prefix=None, view=view,
-                  bot=self, message=message)
+        ctx = cls(prefix=None, view=view, bot=self, message=message)
 
         ctx.prefixes = await self.get_prefix(message)
 
@@ -167,8 +178,10 @@ class NestClient(commands.AutoShardedBot):
 
         if ctx.command:
             ctx._ = functools.partial(
-                self.i18n.getstr, locale=ctx.locale,
-                cog=type(ctx.command.instance).__name__)
+                self.i18n.getstr,
+                locale=ctx.locale,
+                cog=type(ctx.command.instance).__name__,
+            )
 
         return ctx
 
@@ -179,7 +192,7 @@ class NestClient(commands.AutoShardedBot):
             raise commands.NotOwner
 
     def load_module(self, name: str):
-        '''Loads a module from the modules directory.
+        """Loads a module from the modules directory.
 
         A module is a d.py extension that contains commands, cogs, or
         listeners and i18n data.
@@ -196,15 +209,15 @@ class NestClient(commands.AutoShardedBot):
             The extension does not have a setup function.
         ImportError
             The extension could not be imported.
-        '''
+        """
         if name in self.extensions:
             return
 
-        self.load_extension(f'modules.{name}')
+        self.load_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
     def add_cog(self, cog):
-        '''Adds a "cog" to the bot.
+        """Adds a "cog" to the bot.
 
         A cog is a class that has its own event listeners and commands.
 
@@ -225,14 +238,14 @@ class NestClient(commands.AutoShardedBot):
         -----------
         cog
             The cog to register to the bot.
-        '''
-        required = getattr(cog, 'requires', [])
+        """
+        required = getattr(cog, "requires", [])
         unavailable = set(required) - self.features
         if unavailable:
             raise exceptions.MissingFeatures(cog, unavailable)
         super().add_cog(cog)
 
-        provides = getattr(cog, 'provides', None)
+        provides = getattr(cog, "provides", None)
         if provides:
             self.providers.update(cog.provides)
 
@@ -258,7 +271,7 @@ class NestClient(commands.AutoShardedBot):
         if not cog:
             return
 
-        provides = getattr(cog, 'provides', {})
+        provides = getattr(cog, "provides", {})
         for key, provider in provides.items():
             assert self.providers[key] is provider
             self.providers.pop(key)
