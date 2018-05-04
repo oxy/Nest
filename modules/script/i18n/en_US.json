@@ -1,0 +1,7 @@
+{
+    "Scripter": {
+        "while_too_many": "A while loop ran too many times.",
+        "call_too_many": "Protected function `{}` was called too many times.",
+        "": ""
+    }
+}

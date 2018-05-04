@@ -1,0 +1,23 @@
+program      = stmt* EOF
+while        = "while" cond compound
+cond         = ("(" expr (comp expr)* ")") / (expr (comp expr)*)
+assign       = var "=" expr
+if           = "if" cond compound ("else" compound)?
+stmt         = (if / while) / (call / assign) ";"
+compound     = "{" stmt* "}"
+array        = "[" expr ("," expr)* "]"
+kwarg        = varname "=" expr
+expr         = term (r"[\+\-]" term)*
+term         = factor (r"[\*\/]" factor)*
+factor       = bool / float / integer / string / array / ("(" expr ")") / call / (r"[\+\-]" factor) / var
+attr         = varname ("." varname)+
+arg          = kwarg / expr
+call         = var "(" (arg ("," arg)* )? ")"
+byindex      = (attr / varname) ("[" (var/integer/string) "]")+
+var          = byindex / attr / varname
+bool         = "true" / "false"
+comp         = "==" / "!=" / ">=" / "<=" / ">" / "<"
+string       = ('"' r'[^"]*' '"') / ("'" r"[^']*" "'")
+varname      = r"[a-zA-Z_][a-zA-Z0-9_]*"
+float        = r"[+-]?\d*\.\d+"
+integer      = r"[+=]?[\d+]+"
