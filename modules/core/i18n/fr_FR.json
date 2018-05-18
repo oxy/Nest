@@ -1,5 +1,8 @@
 {
-    "CoreCommands": {
-        "ping_response": "Je suis vivant! Temps de réponse: {}ms."
+    "UserCommands": {
+        "ping_response": "Je suis vivant! Temps de réponse: {}ms.",
+        "locale": "Votre locale est **{}**.",
+        "locale_success": "Votre locale est **{}**.",
+        "locale_invalid": "**{}** n'est pas une locale valide."
     }
 }

@@ -1,5 +1,8 @@
 {    
-    "CoreCommands": {
-        "ping_response": "मैं ज़िंदा हूं! अनुक्रिया काल: {}ms."
+    "UserCommands": {
+        "ping_response": "मैं ज़िंदा हूं! अनुक्रिया काल: {}ms.",
+        "locale": "आपका लोकेल **{}** है।",
+        "locale_success": "आपका लोकेल अब **{}** है।",
+        "locale_invalid": "**{}** मान्य लोकेल नहीं है।"
     }
 }

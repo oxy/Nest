@@ -12,7 +12,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.view import StringView
 
-from nest import i18n, exceptions
+from nest import i18n, exceptions, abc
 
 
 class NestClient(commands.AutoShardedBot):
@@ -36,7 +36,7 @@ class NestClient(commands.AutoShardedBot):
         database: Optional[str] = None,
         locale: str,
         prefix: str,
-        owners: List[int],
+        owners: List[int]
     ):
         super().__init__(prefix)
         self._logger = logging.getLogger("NestClient")
@@ -68,7 +68,7 @@ class NestClient(commands.AutoShardedBot):
         # Set the game.
         await self.change_presence(activity=discord.Activity(name="with code"))
 
-    async def get_prefix(self, message: discord.Message):
+    async def get_prefix(self, ctx: commands.Context):
         """|coro|
 
         Retrieves the prefix the bot is listening to
@@ -76,8 +76,8 @@ class NestClient(commands.AutoShardedBot):
 
         Parameters
         -----------
-        message: :class:`discord.Message`
-            The message context to get the prefix of.
+        ctx: :class:`commands.Context`
+            The context to get the prefix of.
 
         Raises
         --------
@@ -97,7 +97,7 @@ class NestClient(commands.AutoShardedBot):
 
         ret = None
         if provider:
-            ret = provider(self, message)
+            ret = provider.get(ctx)
             if asyncio.iscoroutine(ret):
                 ret = await ret
             if ret is not None:
@@ -105,15 +105,15 @@ class NestClient(commands.AutoShardedBot):
 
         return prefixes
 
-    async def get_locale(self, user: discord.User):
+    async def get_locale(self, ctx: commands.Context):
         """|coro|
 
         Retrieves the locale of a user to respond with.
 
         Parameters
         -----------
-        user: :class:`discord.User`
-            The message context to get the prefix of.
+        ctx: :class:`commands.Context`
+            The context to get the prefix of.
 
         Returns
         -------
@@ -124,7 +124,7 @@ class NestClient(commands.AutoShardedBot):
 
         ret = None
         if provider:
-            ret = provider(self, user)
+            ret = provider.get(ctx)
             if asyncio.iscoroutine(ret):
                 ret = await ret
 
@@ -162,7 +162,7 @@ class NestClient(commands.AutoShardedBot):
         view = StringView(message.content)
         ctx = cls(prefix=None, view=view, bot=self, message=message)
 
-        ctx.prefixes = await self.get_prefix(message)
+        ctx.prefixes = await self.get_prefix(ctx)
 
         for category, prefix in ctx.prefixes.items():
             if view.skip_string(prefix):
@@ -174,7 +174,7 @@ class NestClient(commands.AutoShardedBot):
                     ctx.prefix = prefix
                 break
 
-        ctx.locale = await self.get_locale(message.author)
+        ctx.locale = await self.get_locale(ctx)
 
         if ctx.command:
             ctx._ = functools.partial(
@@ -216,39 +216,6 @@ class NestClient(commands.AutoShardedBot):
         self.load_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
-    def add_cog(self, cog):
-        """Adds a "cog" to the bot.
-
-        A cog is a class that has its own event listeners and commands.
-
-        They are meant as a way to organize multiple relevant commands
-        into a singular class that shares some state or no state at all.
-
-        The cog can have a ``requires`` list to list out any required
-        features, and a ``provides`` dict that can provide functions to the bot.
-
-        The cog can also have a ``__global_check`` member function that allows
-        you to define a global check. See :meth:`.check` for more info. If
-        the name is ``__global_check_once`` then it's equivalent to the
-        :meth:`.check_once` decorator.
-
-        More information will be documented soon.
-
-        Parameters
-        -----------
-        cog
-            The cog to register to the bot.
-        """
-        required = getattr(cog, "requires", [])
-        unavailable = set(required) - self.features
-        if unavailable:
-            raise exceptions.MissingFeatures(cog, unavailable)
-        super().add_cog(cog)
-
-        provides = getattr(cog, "provides", None)
-        if provides:
-            self.providers.update(cog.provides)
-
     def remove_cog(self, name):
         """Removes a cog from the bot.
 
@@ -277,3 +244,19 @@ class NestClient(commands.AutoShardedBot):
             self.providers.pop(key)
 
         super().remove_cog(name)
+
+    def add_provider(self, provider: abc.Provider):
+        """Add a Provider to the bot.
+
+        Parameters
+        ----------
+        provider: abc.Provider
+            Provider to add to the bot.
+        """
+        self.providers[provider.provides] = provider
+
+    def has_features(self, *features: str) -> bool:
+        """
+        Check if the bot instance has all listed features.
+        """
+        return set(features) <= self.features
