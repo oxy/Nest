@@ -216,35 +216,6 @@ class NestClient(commands.AutoShardedBot):
         self.load_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
-    def remove_cog(self, name):
-        """Removes a cog from the bot.
-
-        All registered commands, event listeners and providers that the
-        cog has registered will be removed as well.
-
-        If no cog is found then this method has no effect.
-
-        If the cog defines a special member function named ``__unload``
-        then it is called when removal has completed. This function
-        **cannot** be a coroutine. It must be a regular function.
-
-        Parameters
-        -----------
-        name : str
-            The name of the cog to remove.
-        """
-
-        cog = self.cogs.pop(name, None)
-        if not cog:
-            return
-
-        provides = getattr(cog, "provides", {})
-        for key, provider in provides.items():
-            assert self.providers[key] is provider
-            self.providers.pop(key)
-
-        super().remove_cog(name)
-
     def add_provider(self, provider: abc.Provider):
         """Add a Provider to the bot.
 
