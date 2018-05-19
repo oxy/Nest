@@ -5,7 +5,7 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 import aiohttp
 import discord
@@ -30,19 +30,15 @@ class NestClient(commands.AutoShardedBot):
         Internationalization functions for the bot.
     """
 
-    def __init__(
-        self,
-        *,
-        database: Optional[str] = None,
-        locale: str,
-        prefix: str,
-        owners: List[int]
-    ):
-        super().__init__(prefix)
+    def __init__(self, settings: Dict[str, Any], tokens: Dict[str, str]):
+        super().__init__(settings["prefix"])
         self._logger = logging.getLogger("NestClient")
         self.features = set()
         self.providers = {}
+        self.tokens = tokens
+        self.settings = settings
 
+        database = settings.get("database", None)
         if database:
             import asyncpg
 
@@ -55,9 +51,9 @@ class NestClient(commands.AutoShardedBot):
 
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-        self.locale = locale
-        self.owners = owners
-        self.i18n = i18n.I18n(locale="en_US")
+        self.locale = settings.get("locale", "en_US")
+        self.owners = settings["owners"]
+        self.i18n = i18n.I18n(locale=self.locale)
 
     async def on_ready(self):
         """Log successful login event"""
@@ -231,3 +227,14 @@ class NestClient(commands.AutoShardedBot):
         Check if the bot instance has all listed features.
         """
         return set(features) <= self.features
+
+    def run(self, bot: bool=True):
+        """
+        Start running the bot.
+        
+        Parameters
+        ----------
+        bot: bool
+            If bot is a bot account or a selfbot.
+        """
+        super().run(self.tokens["discord"], bot=bot)

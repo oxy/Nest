@@ -52,12 +52,7 @@ def main():
 
     settings = {**DEFAULTS, **config["settings"]}
 
-    bot = client.NestClient(
-        database=settings.get("database", None),
-        locale=settings["locale"],
-        prefix=settings["prefix"],
-        owners=settings["owners"],
-    )
+    bot = client.NestClient(settings, config["tokens"])
 
     for module in os.listdir("modules"):
         # Ignore hidden directories
@@ -71,7 +66,7 @@ def main():
                 ):
                     raise
 
-    bot.run(config["tokens"]["discord"])
+    bot.run()
 
 
 if __name__ == "__main__":
