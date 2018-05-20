@@ -5,7 +5,7 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
-from typing import List, Optional, Dict, Any
+from typing import Dict, Any
 
 import aiohttp
 import discord
@@ -20,8 +20,8 @@ class NestClient(commands.AutoShardedBot):
 
     Attributes
     ----------
-    database: nest.db.DBWrapper
-        The wrapper for the database.
+    database: asyncpg.pool.ConnectionPool
+        The connection pool for the database.
     session: aiohttp.ClientSession
         aiohttp session to use for making requests.
     owners: list
@@ -75,14 +75,6 @@ class NestClient(commands.AutoShardedBot):
         ctx: :class:`commands.Context`
             The context to get the prefix of.
 
-        Raises
-        --------
-        :exc:`.ClientException`
-            The prefix was invalid. This could be if the prefix
-            function returned None, the prefix list returned no
-            elements that aren't None, or the prefix string is
-            empty.
-
         Returns
         --------
         Dict[str, str]
@@ -128,7 +120,7 @@ class NestClient(commands.AutoShardedBot):
 
     async def get_context(
         self, message: discord.Message, *, cls=commands.Context
-    ):
+    ) -> commands.Context:
         """|coro|
 
         Returns the invocation context from the message.
