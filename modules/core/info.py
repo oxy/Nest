@@ -25,7 +25,7 @@ class InfoCommands:
             ctx._("bot_users"): f"{sum(m for m in ctx.bot.get_all_members() if m.bot)}",
             ctx._("human_users"): f"{sum(m for m in ctx.bot.get_all_members() if not m.bot)}",
             ctx._("discord_py"): f"{discord.__version__}",
-            ctx._("python"): ".".join(str(e) for e in sys.version_info[:3]),
+            "Python": ".".join(str(e) for e in sys.version_info[:3]),
             ctx._("website"): "**[birb.pw](https://birb.pw/)**",
             ctx._("invite"): "**[invite.birb.pw](https://invite.birb.pw)**",
             ctx._("support"): "**[discord.gg/BysDKDB](https://discord.gg/BysDKDB)**",
