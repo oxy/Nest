@@ -12,8 +12,8 @@
     "InfoCommands": {
         "servers": "Servers",
         "users": "Users",
-        "bot_users": "Bot users",
-        "human_users": "Human users",
+        "bot_users": "Bots",
+        "human_users": "People",
         "discord_py": "discord.py",
         "website": "Website",
         "invite": "Invite",
