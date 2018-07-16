@@ -18,6 +18,8 @@ API_URBAN_DICTIONARY = "http://api.urbandictionary.com/v0/define"
 
 
 class LanguageCommands:
+    category = "user"
+
     @commands.command()
     async def jisho(self, ctx, *, word: str):
         """Translate a word into Japanese."""
