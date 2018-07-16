@@ -8,7 +8,7 @@ FIELDS = {
 }
 
 
-class KitsuWrapper:
+class Kitsu:
     category = "user"
 
     @commands.command(aliases=["manga", "anime"])
@@ -46,7 +46,3 @@ class KitsuWrapper:
 
         embed.set_thumbnail(url=attributes["posterImage"]["original"])
         await ctx.send(embed=embed)
-
-
-def setup(bot):
-    bot.add_cog(KitsuWrapper())

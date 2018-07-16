@@ -5,5 +5,11 @@
         "example": "Example",
         "upvotes": "Upvotes",
         "downvotes": "Downvotes"
+    },
+    "Kitsu": {
+        "rating": "Rating",
+        "status": "Status",
+        "startdate": "Started",
+        "enddate": "Finished"
     }
 }
