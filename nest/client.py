@@ -220,7 +220,7 @@ class NestClient(commands.AutoShardedBot):
         """
         return set(features) <= self.features
 
-    def run(self, bot: bool=True):
+    def run(self, bot: bool = True):
         """
         Start running the bot.
         

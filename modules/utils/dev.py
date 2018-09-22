@@ -11,6 +11,7 @@ URL_PYPI_API = "https://pypi.python.org/pypi/{package}/json"
 URL_PYPI_PACKAGE = "https://pypi.python.org/pypi/{package}"
 FIELDS_PYPI = {"license", "docs_url", "home_page", "requires_python"}
 
+
 class PackageLookups:
     category = "user"
 
@@ -33,14 +34,12 @@ class PackageLookups:
         embed = discord.Embed(
             title=f"{info['name']} `({info['version']})`",
             description=helpers.smart_truncate(info["description"]),
-            url=URL_PYPI_PACKAGE.format(package=package)
+            url=URL_PYPI_PACKAGE.format(package=package),
         )
 
         for field in FIELDS_PYPI & info.keys():
             if info[field]:
-                embed.add_field(name=ctx._(field),
-                                value=info[field])
+                embed.add_field(name=ctx._(field), value=info[field])
 
-        embed.set_thumbnail(url='http://i.imgur.com/1Pp5s56.png')
+        embed.set_thumbnail(url="http://i.imgur.com/1Pp5s56.png")
         await ctx.send(embed=embed)
-

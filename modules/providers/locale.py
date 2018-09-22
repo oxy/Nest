@@ -1,6 +1,7 @@
 from discord.ext import commands
 from nest import abc
 
+
 class LocaleProvider(abc.Provider):
     provides = "locale"
 
@@ -44,5 +45,5 @@ class LocaleProvider(abc.Provider):
                     DO UPDATE SET (id, locale) = ($1, $2);
                 """,
                 ctx.author.id,
-                data
+                data,
             )

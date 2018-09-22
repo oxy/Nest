@@ -3,6 +3,7 @@ Provides cog for core moderator commands.
 """
 from discord.ext import commands
 
+
 class ModCommands:
     @commands.command()
     @commands.has_permissions(manage_server=True)
@@ -19,7 +20,9 @@ class ModCommands:
         prefixes = ctx.prefixes.copy()
         prefixes.update({category: prefix})
 
-        await ctx.bot.providers['prefix'].set()
+        await ctx.bot.providers["prefix"].set()
         await ctx.send(
-            ctx._("prefix_set_success").format(category=category, prefix=prefix)
+            ctx._("prefix_set_success").format(
+                category=category, prefix=prefix
+            )
         )

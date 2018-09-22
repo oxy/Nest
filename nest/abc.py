@@ -3,6 +3,7 @@
 import abc
 from discord.ext import commands
 
+
 class Provider(abc.ABC):
     """
     Abstract base class for a provider.
@@ -17,6 +18,7 @@ class Provider(abc.ABC):
     get:
         Fetches data
     """
+
     provides: str
 
     @abc.abstractmethod

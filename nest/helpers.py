@@ -32,6 +32,7 @@ def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
         item = item[k]
     return item
 
+
 def smart_truncate(content: str, length: int = 400, suffix: str = "..") -> str:
     """
     Truncates a string to `...` where necessary
@@ -53,7 +54,7 @@ def smart_truncate(content: str, length: int = 400, suffix: str = "..") -> str:
 
     if len(content) >= length:
         content = content[:length]
-        content = content.rsplit('\n', 1)[0]  # Cut to nearest paragraph.
-        content = content.rsplit('.', 1)[0] + "."  # Cut to nearest sentence.
+        content = content.rsplit("\n", 1)[0]  # Cut to nearest paragraph.
+        content = content.rsplit(".", 1)[0] + "."  # Cut to nearest sentence.
         content += suffix
     return content

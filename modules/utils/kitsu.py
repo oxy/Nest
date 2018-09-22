@@ -4,7 +4,9 @@ from discord.ext import commands
 from nest import exceptions
 
 FIELDS = {
-    "rating": "averageRating", "status": "status", "started": "startDate"
+    "rating": "averageRating",
+    "status": "status",
+    "started": "startDate",
 }
 
 

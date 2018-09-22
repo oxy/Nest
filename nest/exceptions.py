@@ -32,6 +32,7 @@ class WebAPINoResults(WebAPIException):
     """
     Raised when an API does not return a result.
     """
+
     pass
 
 
@@ -39,6 +40,7 @@ class WebAPIUnreachable(WebAPIException):
     """
     Raised when a web API could not be reached.
     """
+
     pass
 
 

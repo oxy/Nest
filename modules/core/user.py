@@ -43,7 +43,7 @@ class UserCommands:
             await ctx.send(ctx._("locale_invalid").format(locale))
             return
 
-        await ctx.bot.providers['locale'].set(ctx, locale)
+        await ctx.bot.providers["locale"].set(ctx, locale)
         await ctx.send(ctx._("locale_success", locale=locale).format(locale))
 
     @commands.command(aliases=["whatprefix"])
@@ -53,7 +53,7 @@ class UserCommands:
         """
         message = "```yml\n"
         for key, prefix in ctx.prefixes:
-            key = ctx._(f"prefix_{key}") 
+            key = ctx._(f"prefix_{key}")
             message += f"{key}: {prefix}"
         message += "```"
         await ctx.send(message)

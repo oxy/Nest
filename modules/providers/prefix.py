@@ -8,6 +8,7 @@ class PrefixProvider(abc.Provider):
     """
     Provider for prefixes.
     """
+
     provides = "prefix"
 
     async def get(self, ctx: commands.Context):
@@ -67,4 +68,4 @@ class PrefixProvider(abc.Provider):
                 ctx.guild.id,
                 data["user"],
                 data["mod"],
-                )
+            )

@@ -60,7 +60,9 @@ class LanguageCommands:
         """Grab a word from urban dictionary."""
 
         params = {"term": word}
-        async with ctx.bot.session.get(API_URBAN_DICTIONARY, params=params) as response:
+        async with ctx.bot.session.get(
+            API_URBAN_DICTIONARY, params=params
+        ) as response:
             if response.status == 200:
                 data = await response.text()
                 response = json.loads(data)
@@ -77,20 +79,36 @@ class LanguageCommands:
         thumbs_up = content["thumbs_up"]
         thumbs_down = content["thumbs_down"]
 
-        embed = discord.Embed(title=content["word"], description=content["author"],
-                              url=content["permalink"])
+        embed = discord.Embed(
+            title=content["word"],
+            description=content["author"],
+            url=content["permalink"],
+        )
 
         if "definition" in content:
-            embed.add_field(name=ctx._("definition"), value=content["definition"], inline=False)
+            embed.add_field(
+                name=ctx._("definition"),
+                value=content["definition"],
+                inline=False,
+            )
 
         if "example" in content:
-            embed.add_field(name=ctx._("example"), value=content["example"], inline=False)
+            embed.add_field(
+                name=ctx._("example"),
+                value=content["example"],
+                inline=False,
+            )
 
-        embed.add_field(name=ctx._("upvotes"),
-                        value=f":thumbsup::skin-tone-2: {thumbs_up}",
-                        inline=True)
-        embed.add_field(name=ctx._("downvotes"),
-                        value=f":thumbsdown::skin-tone-2: {thumbs_down}",
-                        inline=True)
+        embed.add_field(
+            name=ctx._("upvotes"),
+            value=f":thumbsup::skin-tone-2: {thumbs_up}",
+            inline=True,
+        )
+
+        embed.add_field(
+            name=ctx._("downvotes"),
+            value=f":thumbsdown::skin-tone-2: {thumbs_down}",
+            inline=True,
+        )
 
         await ctx.send(embed=embed)
