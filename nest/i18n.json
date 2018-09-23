@@ -4,6 +4,16 @@
             "en": "English (United States)",
             "fr": "Anglais (Les États-Unis)",
             "hi": "अंग्रेज़ी (अमेरिका)"
+        },
+        "time": {
+            "month": "month",
+            "months": "months",
+            "day": "day",
+            "days": "days",
+            "hour": "hour",
+            "hours": "hours",
+            "minute": "minute",
+            "minutes": "minutes"
         }
     },
     "fr_FR": {
