@@ -10,14 +10,6 @@
         "prefix_set_success": "Successfully set prefix for {category} to {prefix}."
     },
     "InfoCommands": {
-        "servers": "Servers",
-        "users": "Users",
-        "bot_users": "Bots",
-        "human_users": "People",
-        "discord_py": "discord.py",
-        "website": "Website",
-        "invite": "Invite",
-        "support": "Support",
-        "library": "Library"
+        "information": "{bot} is playing in {guilds} guilds, with {channels} channels and {users} users. Online for {uptime}, with {commands} commands."
     }
 }

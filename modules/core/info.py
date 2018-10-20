@@ -6,38 +6,28 @@ Provides informational commands.
 """
 
 import sys
-import datetime
+from datetime import datetime
 
 import discord
 from discord.ext import commands
+from dateutil.relativedelta import relativedelta
 
 
 class InfoCommands:
-    @commands.command()
-    async def info(self, ctx):
-        """Display information about Birb"""
+    category = "user"
 
-        embed = discord.Embed()
+    @commands.command(aliases=["info"])
+    async def stats(self, ctx):
+        """Display statistics about the bot."""
+        uptime = relativedelta(datetime.now(), ctx.bot.created)
 
-        fields = {
-            ctx._("servers"): f"{len(ctx.bot.guilds)}",
-            ctx._("users"): f"{sum(m for m in ctx.bot.get_all_members())}",
-            ctx._("bot_users"): f"{sum(m for m in ctx.bot.get_all_members() if m.bot)}",
-            ctx._("human_users"): f"{sum(m for m in ctx.bot.get_all_members() if not m.bot)}",
-            ctx._("discord_py"): f"{discord.__version__}",
-            "Python": ".".join(str(e) for e in sys.version_info[:3]),
-            ctx._("website"): "**[birb.pw](https://birb.pw/)**",
-            ctx._("invite"): "**[invite.birb.pw](https://invite.birb.pw)**",
-            ctx._("support"): "**[discord.gg/BysDKDB](https://discord.gg/BysDKDB)**",
-            ctx._("library"): "**[discord.py](https://github.com/Rapptz/discord.py)**",
-        }
+        text = ctx._("information").format(
+            bot=ctx.bot.user.name,
+            guilds=len(ctx.bot.guilds),
+            channels=sum(1 for _ in ctx.bot.get_all_channels()),
+            users=sum(1 for _ in ctx.bot.get_all_members()),
+            uptime=ctx.bot.i18n.format_timedelta(ctx.locale, uptime),
+            commands=len(ctx.bot.commands),
+        )
 
-        for name, value in fields.items():
-            embed.add_field(name=name, value=value, inline=True)
-
-        embed.set_author(icon_url=ctx.bot.user.avatar_url,
-                         name=ctx.bot.user.name,
-                         url="http://birb.pw/")
-        embed.set_thumbnail(url=ctx.bot.user.avatar_url)
-
-        await ctx.send(embed=embed)
+        await ctx.send(text)
