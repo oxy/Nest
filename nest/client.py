@@ -5,6 +5,7 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
+from datetime import datetime
 from typing import Dict, Any
 
 import aiohttp
@@ -37,6 +38,7 @@ class NestClient(commands.AutoShardedBot):
         self.providers = {}
         self.tokens = tokens
         self.settings = settings
+        self.created = datetime.now()
 
         database = settings.get("database", None)
         if database:
@@ -161,9 +163,9 @@ class NestClient(commands.AutoShardedBot):
                         not command.instance
                         or command.instance.category == category
                     ):
-                    ctx.command = command
-                    ctx.invoked_with = invoker
-                    ctx.prefix = prefix
+                        ctx.command = command
+                        ctx.invoked_with = invoker
+                        ctx.prefix = prefix
                 break
 
         ctx.locale = await self.get_locale(ctx)
