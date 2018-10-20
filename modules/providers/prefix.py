@@ -31,7 +31,7 @@ class PrefixProvider(abc.Provider):
         if ctx.message.guild:
             async with ctx.bot.database.acquire() as conn:
                 prefixes = await conn.fetchrow(
-                    "SELECT user_prefix, mod_prefix FROM prefix WHERE id=$1",
+                    "SELECT user_prefix, mod_prefix FROM guild WHERE id=$1",
                     ctx.message.guild.id,
                 )
 
@@ -60,7 +60,7 @@ class PrefixProvider(abc.Provider):
         async with ctx.bot.database.acquire() as conn:
             await conn.execute(
                 """
-                INSERT INTO prefix (id, user_prefix, mod_prefix)
+                INSERT INTO guild (id, user_prefix, mod_prefix)
                     VALUES ($1, $2, $3)
                     ON CONFLICT (id) DO UPDATE
                         SET (id, user_prefix, mod_prefix) = ($1, $2, $3);

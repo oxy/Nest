@@ -1,0 +1,5 @@
+guild:
+  user_prefix: text
+  mod_prefix: text
+userdata:
+  locale: text
