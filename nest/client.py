@@ -156,7 +156,11 @@ class NestClient(commands.AutoShardedBot):
             if view.skip_string(prefix):
                 invoker = view.get_word()
                 command = self.all_commands.get(invoker)
-                if command and command.instance.category == category:
+                if command:
+                    if (
+                        not command.instance
+                        or command.instance.category == category
+                    ):
                     ctx.command = command
                     ctx.invoked_with = invoker
                     ctx.prefix = prefix
