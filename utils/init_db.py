@@ -10,6 +10,7 @@ import yaml
 SQL_QUERY = "ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {field} {ftype};"
 SQL_TABLECREATE = "CREATE TABLE IF NOT EXISTS {table} (id BIGINT PRIMARY KEY);"
 
+
 def buildqueries():
     data = {}
     queries = []
@@ -33,12 +34,15 @@ def buildqueries():
 
     for table, fields in data.items():
         for field, ftype in fields.items():
-            queries.append(SQL_QUERY.format(table=table, field=field, ftype=ftype))
+            queries.append(
+                SQL_QUERY.format(table=table, field=field, ftype=ftype)
+            )
 
     return queries
 
+
 async def runqueries(*queries: str):
-    pool = await asyncpg.create_pool(database='nest')
+    pool = await asyncpg.create_pool(database="nest")
 
     async with pool.acquire() as conn:
         for query in queries:
@@ -50,7 +54,7 @@ def main():
     print("Queries are: ", *queries, sep="\n")
 
     choice = input("Continue? [y/n]: ")
-    if choice.lower() == 'y':
+    if choice.lower() == "y":
         print("Running queries on database...")
         loop = asyncio.get_event_loop()
         loop.run_until_complete(runqueries(*queries))
