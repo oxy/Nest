@@ -9,7 +9,7 @@ from nest import exceptions, helpers
 
 URL_PYPI_API = "https://pypi.python.org/pypi/{package}/json"
 URL_PYPI_PACKAGE = "https://pypi.python.org/pypi/{package}"
-FIELDS_PYPI = {"license", "docs_url", "home_page", "requires_python"}
+FIELDS_PYPI = {"license", "docs_url", "home_page", "requires_python", "author"}
 
 
 class PackageLookups:
@@ -23,10 +23,15 @@ class PackageLookups:
         data_url = URL_PYPI_API.format(package=package)
 
         async with ctx.bot.session.get(data_url) as resp:
-            if not resp.status == 200:
+            if not resp.status in [200, 404]:
                 raise exceptions.WebAPIInvalidResponse(
                     api="PyPI", status=resp.status
                 )
+
+            if resp.status == 404:
+                await ctx.send("{package} isn't a package on PyPI!")
+                return
+
             data = await resp.json()
 
         info = data["info"]
