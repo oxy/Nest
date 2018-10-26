@@ -16,6 +16,8 @@
         "license": "License", 
         "docs_url": "Documentation",
         "home_page": "Website",
+        "homepage": "Website",
+        "author": "Author",
         "requires_python": "Requires Python"
     }
 }
