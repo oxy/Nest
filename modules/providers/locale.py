@@ -22,7 +22,8 @@ class LocaleProvider(abc.Provider):
         """
         async with ctx.bot.database.acquire() as conn:
             locale = await conn.fetchval(
-                "SELECT locale FROM userdata WHERE id=$1", ctx.message.author.id
+                "SELECT locale FROM userdata WHERE id=$1",
+                ctx.message.author.id,
             )
         return locale
 
@@ -41,8 +42,8 @@ class LocaleProvider(abc.Provider):
         async with ctx.bot.database.acquire() as conn:
             await conn.execute(
                 """
-                INSERT INTO userdata (id, locale) VALUES ($1, $2) ON CONFLICT (id)
-                    DO UPDATE SET (id, locale) = ($1, $2);
+                INSERT INTO userdata (id, locale) VALUES ($1, $2)
+                    ON CONFLICT (id) DO UPDATE SET (id, locale) = ($1, $2);
                 """,
                 ctx.author.id,
                 data,
