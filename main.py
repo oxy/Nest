@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Load and start the Nest client.
 """
