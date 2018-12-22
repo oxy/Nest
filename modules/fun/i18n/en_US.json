@@ -1,5 +1,12 @@
 {
     "Comics": {
         "published": "Published on: "
+    },
+    "RandomCommands": {
+	"heads": "Heads!",
+	"tails": "Tails!",
+	"roll_result": "You rolled a `{score}/{maxscore}`.",
+	"rating": "Birb rates `{content}` a {rating}/10."
     }
 }
+
