@@ -2,3 +2,4 @@ PyYAML
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
 asyncpg
 py-dateutil
+pycountry
