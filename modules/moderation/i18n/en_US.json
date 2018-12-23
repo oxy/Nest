@@ -1,0 +1,10 @@
+{
+	"ModActions": {
+		"ban_success": "Banned {} successfully.",
+		"ban_failure": "You don't have enough permissions to ban {}!",
+		"softban_success": "Softbanned {} successfully.",
+		"softban_failure": "You don't have enough permissions to softban {}!",
+		"kick_success": "Kicked {} successfully.",
+		"kick_failure": "You don't have enough permissions to kick {}!"
+	}
+}
