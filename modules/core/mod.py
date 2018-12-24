@@ -22,7 +22,7 @@ class ModCommands:
         prefixes = ctx.prefixes.copy()
         prefixes.update({category: prefix})
 
-        await ctx.bot.providers["prefix"].set()
+        await ctx.bot.providers["prefix"].set(ctx, prefixes)
         await ctx.send(
             ctx._("prefix_set_success").format(
                 category=category, prefix=prefix
