@@ -5,6 +5,8 @@ from discord.ext import commands
 
 
 class ModCommands:
+    category = "mod"
+
     @commands.command()
     @commands.has_permissions(manage_server=True)
     @commands.guild_only()
