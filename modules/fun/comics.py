@@ -8,9 +8,7 @@ from discord.ext import commands
 from nest import exceptions
 
 
-class Comics:
-    category = "user"
-
+class Comics(commands.Cog):
     @commands.command()
     async def xkcd(self, ctx, number: int = None):
         """

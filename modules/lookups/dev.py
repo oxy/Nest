@@ -15,9 +15,7 @@ URL_NPM_API = "https://registry.npmjs.org/{package}/{version}"
 FIELDS_NPM = {"license", "homepage"}
 
 
-class PackageLookups:
-    category = "user"
-
+class PackageLookups(commands.Cog):
     @commands.command()
     async def pypi(self, ctx, package: str):
         """

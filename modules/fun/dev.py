@@ -10,9 +10,7 @@ from nest import exceptions
 WHATTHECOMMIT_API_URL = "http://whatthecommit.com/index.json"
 
 
-class DeveloperFun:
-    category = "user"
-
+class DeveloperFun(commands.Cog):
     @commands.command()
     async def fakegit(self, ctx):
         """

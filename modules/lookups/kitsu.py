@@ -10,9 +10,7 @@ FIELDS = {
 }
 
 
-class Kitsu:
-    category = "user"
-
+class Kitsu(commands.Cog):
     @commands.command(aliases=["manga", "anime"])
     async def kitsu(self, ctx, *, name: str):
         """

@@ -17,9 +17,7 @@ API_JISHO_ORG = "http://jisho.org/api/v1/search/words?keyword={0}"
 API_URBAN_DICTIONARY = "http://api.urbandictionary.com/v0/define"
 
 
-class LanguageCommands:
-    category = "user"
-
+class LanguageCommands(commands.Cog):
     @commands.command()
     async def jisho(self, ctx, *, word: str):
         """Translate a word into Japanese."""

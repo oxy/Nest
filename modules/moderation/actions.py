@@ -5,9 +5,7 @@ Provides basic moderation actions.
 import discord
 from discord.ext import commands
 
-class ModActions:
-    category = "mod"
-
+class ModActions(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(ban_members=True)
     @commands.has_permissions(ban_members=True)

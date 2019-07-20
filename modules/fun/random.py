@@ -6,9 +6,7 @@ import random
 from discord.ext import commands
 
 
-class RandomCommands:    
-    category = "user"
-
+class RandomCommands(commands.Cog):    
     @commands.command(aliases=["coinflip"])
     async def coin(self, ctx):
         """

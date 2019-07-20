@@ -1,15 +1,14 @@
 {
-    "UserCommands": {
-        "ping_response": "I'm alive! Response time: {}ms.",
+    "LocaleManager": {
         "locale": "Your locale is **{}**.",
         "locale_success": "Your locale is now **{}**.",
         "locale_invalid": "**{}** is not a valid locale."
     },
-    "ModCommands": {
-        "prefix_invalid_category": "Invalid category {}. Expecting one of `user`, `mod`.",
-        "prefix_set_success": "Successfully set prefix for {category} to {prefix}."
+    "PrefixManager": {
+        "prefix_set_success": "Successfully set prefix to {prefix}."
     },
     "InfoCommands": {
-        "information": "{bot} is playing in {guilds} guilds, with {channels} channels and {users} users. Online for {uptime}, with {commands} commands."
+        "information": "{bot} is playing in {guilds} guilds, with {channels} channels and {users} users. Online for {uptime}, with {commands} commands.",
+        "ping_response": "I'm alive! Response time: {}ms."
     }
 }

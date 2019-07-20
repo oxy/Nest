@@ -1,9 +1,9 @@
 from discord.ext import commands
-from nest import abc
 
 
-class LocaleProvider(abc.Provider):
-    provides = "locale"
+class LocaleStore(commands.Cog):
+    def __init__(self, bot):
+        self._db = bot.get_cog("PostgreSQL")
 
     async def get(self, ctx: commands.Context):
         """|coro|
@@ -20,14 +20,14 @@ class LocaleProvider(abc.Provider):
         str
             Locale for the given context.
         """
-        async with ctx.bot.database.acquire() as conn:
+        async with self._db.pool.acquire() as conn:
             locale = await conn.fetchval(
                 "SELECT locale FROM userdata WHERE id=$1",
                 ctx.message.author.id,
             )
         return locale
 
-    async def set(self, ctx: commands.Context, data):
+    async def set(self, ctx: commands.Context, locale: str):
         """|coro|
 
         Sets a valid locale for a given context.
@@ -39,12 +39,12 @@ class LocaleProvider(abc.Provider):
         data: Dict[str, str]
             Dictionary of prefixes.
         """
-        async with ctx.bot.database.acquire() as conn:
+        async with self._db.pool.acquire() as conn:
             await conn.execute(
                 """
                 INSERT INTO userdata (id, locale) VALUES ($1, $2)
                     ON CONFLICT (id) DO UPDATE SET (id, locale) = ($1, $2);
                 """,
                 ctx.author.id,
-                data,
+                locale,
             )

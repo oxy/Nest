@@ -1,0 +1,4 @@
+guild:
+  prefix: text
+userdata:
+  locale: text

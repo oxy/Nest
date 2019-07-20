@@ -12,9 +12,7 @@ MOD_EMOTICONS = {
     "dnd": "<:dnd2:464520569560498197>"
 }
 
-class CheckMods:
-    category = "user"
-
+class CheckMods(commands.Cog):
     @commands.command(aliases=["staff"])
     async def mods(self, ctx):
         mods = [m for m in ctx.guild.members 

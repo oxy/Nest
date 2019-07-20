@@ -14,9 +14,7 @@ URL_MCUUID_API = "https://api.mojang.com/users/profiles/minecraft/{user}"
 URL_MCSKIN_API = "https://visage.surgeplay.com/{image}/{uuid}.png"
 URL_OSU_API = "https://osu.ppy.sh/api/get_user"
 
-class GamingLookups:
-    category = "user"
-
+class GamingLookups(commands.Cog):
     @commands.command()
     async def mcskin(self, ctx, user: str, image: str = "full"):
         url = URL_MCUUID_API.format(user=user)

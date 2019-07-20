@@ -12,7 +12,7 @@ import yaml
 from nest import client, helpers, exceptions
 
 DEFAULTS = {
-    "prefix": {"user": "nest$", "mod": "nest@", "owner": "nest#"},
+    "prefix": "nest!",
     "locale": "en_US",
 }
 
@@ -52,13 +52,16 @@ def main():
 
             pointer[keys[-1]] = val
 
-    settings = {**DEFAULTS, **config["settings"]}
+    settings = {**DEFAULTS, **config["settings"], "tokens": config["tokens"]}
 
-    bot = client.NestClient(settings, config["tokens"])
+    bot = client.NestClient(**settings)
+
+    if settings["database"]:
+        bot.load_module("db")
 
     for module in os.listdir("modules"):
         # Ignore hidden directories
-        if not module.startswith("."):
+        if not module.startswith(".") and module != "db":
             try:
                 bot.load_module(module)
             except exceptions.MissingFeatures as exc:
