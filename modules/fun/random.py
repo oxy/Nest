@@ -30,8 +30,7 @@ class RandomCommands(commands.Cog):
         
 
     @commands.command()
-    async def rate(self, ctx, *args):
-        content = ' '.join(args)
+    async def rate(self, ctx, *, content: str):
         num = random.randint(0, 10)
-        await ctx.send(ctx._("rating").format(content=content, num=num))
+        await ctx.send(ctx._("rating").format(content=content, rating=num))
 
