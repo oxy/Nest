@@ -139,7 +139,8 @@ class NestClient(commands.AutoShardedBot):
         ctx = await super().get_context(message, cls=cls)
 
         if ctx.command:
-            ctx.locale = await get_locale(self, ctx)
+            user_locale = await get_locale(self, ctx)
+            ctx.locale = user_locale if user_locale else self.i18n.locale
             ctx._ = functools.partial(
                 self.i18n.getstr,
                 locale=ctx.locale,
