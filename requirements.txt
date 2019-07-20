@@ -3,3 +3,4 @@ discord
 asyncpg
 py-dateutil
 pycountry
+nsfw_dl
