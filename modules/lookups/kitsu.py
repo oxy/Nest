@@ -28,7 +28,7 @@ class Kitsu(commands.Cog):
             data = await resp.json(content_type="application/vnd.api+json")
 
         if not data["meta"]["count"]:
-            raise exceptions.WebAPINoResults(api="kitsu")
+            raise exceptions.WebAPINoResults(api="kitsu", q=name)
 
         attributes = data["data"][0]["attributes"]
 

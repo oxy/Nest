@@ -23,9 +23,10 @@ class WebAPIException(Exception):
     Base exception from which API exceptions are derived.
     """
 
-    def __init__(self, api):
+    def __init__(self, api, q):
         super().__init__()
         self.api = api
+        self.q = q
 
 
 class WebAPINoResults(WebAPIException):
