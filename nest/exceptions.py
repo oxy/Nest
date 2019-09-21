@@ -54,3 +54,10 @@ class WebAPIInvalidResponse(WebAPIException):
     def __init__(self, api: str, status: int):
         super().__init__(api)
         self.status = status
+
+
+EXC_I18N_MAP = {
+    WebAPIInvalidResponse: "invalid_response",
+    WebAPINoResults: "no_results",
+    WebAPIUnreachable: "unreachable"
+}
