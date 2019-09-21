@@ -69,11 +69,10 @@ class LanguageCommands(commands.Cog):
                     api="urbandictionary.com", status=response.status
                 )
 
-        try:
-            content = response["list"][0]
-        except (KeyError, IndexError):
+        if not response["list"]:
             raise exceptions.WebAPINoResults(api="urbandictionary", q=word)
 
+        content = response["list"][0]
         thumbs_up = content["thumbs_up"]
         thumbs_down = content["thumbs_down"]
 
