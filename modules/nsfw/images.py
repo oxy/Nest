@@ -1,80 +1,60 @@
 import discord
 from discord.ext import commands
 import nsfw_dl
+import nsfw_dl.errors
 
-class NSFW(commands.Cog):
+from nest import exceptions
+
+SERVICES = ["rule34", "e621", "furrybooru", "gelbooru", "konachan", "tbib",
+            "xbooru", "yandere"]
+
+def wrap_fn(newname: str, doc: str):
+    """
+    Decorator which renames a function.
+    
+    Parameters
+    ----------
+    newname: str
+        Name of the new function.
+    doc: str
+        Docstring of the new function.
+    """
+    def decorator(f):
+        f.__name__ = newname
+        f.__doc__ = doc
+        return f
+    return decorator
+
+def gen_command(service: str):
+    """
+    Generates a command helper.
+    """
+    service_arg = service.capitalize() + 'Search'
+
+    @commands.is_nsfw()
+    @commands.command()
+    @wrap_fn(service, f"Search {service} for images.")
+    async def nsfwsearch(self, ctx, *, query):
+        """
+        NSFW search utility command, common for every library.
+        """
+        try:
+            content = await self.client.download(service_arg, args=query)
+        except nsfw_dl.errors.NoResultsFound:
+            raise exceptions.WebAPINoResults(api=service, q=query)
+        embed = discord.Embed()
+        embed.set_image(url=content)
+        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
+        await ctx.send(embed=embed)
+
+    return nsfwsearch
+
+class _NSFWCommands:
     def __init__(self, bot):
         self.client = nsfw_dl.NSFWDL(session=bot.session, loop=bot.loop)
 
-    @commands.is_nsfw()
-    @commands.command()
-    async def rule34(self, ctx, *, query):
-        content = await self.client.download('Rule34Search', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
+for sv in SERVICES:
+    setattr(_NSFWCommands, sv, gen_command(sv))
 
-    @commands.is_nsfw()
-    @commands.command()
-    async def e621(self, ctx, *, query):
-        content = await self.client.download('E621Search', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def furrybooru(self, ctx, *, query):
-        content = await self.client.download('FurrybooruSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def gelbooru(self, ctx, *, query):
-        content = await self.client.download('GelbooruSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def konachan(self, ctx, *, query):
-        content = await self.client.download('KonachanSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url='http:'+content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def tbib(self, ctx, *, query):
-        content = await self.client.download('TbibSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def xbooru(self, ctx, *, query):
-        content = await self.client.download('XbooruSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
-    @commands.is_nsfw()
-    @commands.command()
-    async def yandere(self, ctx, *, query):
-        content = await self.client.download('YandereSearch', args=query)
-        embed = discord.Embed()
-        embed.set_image(url=content)
-        embed.set_footer(text=f"Requested by {ctx.author.display_name}")
-        await ctx.send(embed=embed)
-
+class NSFW(_NSFWCommands, commands.Cog):
+    pass
