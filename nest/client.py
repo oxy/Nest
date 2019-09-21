@@ -93,6 +93,7 @@ class NestClient(commands.AutoShardedBot):
         )
         self._logger = logging.getLogger("NestClient")
         self.tokens: Dict[str, str] = options.pop("tokens", {})
+        self.owner_ids = set(options.pop("owners", []))
         self.created = datetime.now()
         self.session = aiohttp.ClientSession(loop=self.loop)
 
@@ -172,6 +173,29 @@ class NestClient(commands.AutoShardedBot):
             return
 
         self.load_extension(f"modules.{name}")
+        self.i18n.load_module(name)
+
+    def reload_module(self, name: str):
+        """Loads a module from the modules directory.
+
+        A module is a d.py extension that contains commands, cogs, or
+        listeners and i18n data.
+
+        Parameters
+        ----------
+        name: str
+            The extension name to load. It must be a valid name of a folder
+            within the modules directory.
+
+        Raises
+        ------
+        ClientException
+            The extension does not have a setup function.
+        ImportError
+            The extension could not be imported.
+        """
+
+        self.reload_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
     def run(self, bot: bool = True):
