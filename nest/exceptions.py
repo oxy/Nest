@@ -23,10 +23,9 @@ class WebAPIException(Exception):
     Base exception from which API exceptions are derived.
     """
 
-    def __init__(self, api, q):
+    def __init__(self, api: str):
         super().__init__()
         self.api = api
-        self.q = q
 
 
 class WebAPINoResults(WebAPIException):
@@ -34,7 +33,9 @@ class WebAPINoResults(WebAPIException):
     Raised when an API does not return a result.
     """
 
-    pass
+    def __init__(self, api: str, q: str):
+        super().__init__(api)
+        self.q = q
 
 
 class WebAPIUnreachable(WebAPIException):
@@ -50,6 +51,6 @@ class WebAPIInvalidResponse(WebAPIException):
     Raised when a web API returns an invalid response.
     """
 
-    def __init__(self, api, status):
+    def __init__(self, api: str, status: int):
         super().__init__(api)
         self.status = status
