@@ -1,6 +1,7 @@
 {
     "Comics": {
-        "published": "Published on: "
+        "published": "Published on: ",
+        "not_a_comic": "Error: {num} is not a comic on {comic}."
     },
     "RandomCommands": {
 	"heads": "Heads!",

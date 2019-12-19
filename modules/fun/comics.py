@@ -27,7 +27,7 @@ class Comics(commands.Cog):
                 )
 
             if resp.status == 404:
-                await ctx.send("{number} isn't a comic on XKCD!")
+                await ctx.send(ctx._("not_a_comic").format(num=number, comic="XKCD"))
                 return
 
             data = await resp.json()
