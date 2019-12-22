@@ -30,5 +30,8 @@
             "Outlook not so good.",
             "Very doubtful."
         ]
+    },
+    "RandomImages": {
+        "provided_by {service}": "Provided by {service}."
     }
 }
