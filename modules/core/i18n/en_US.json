@@ -10,5 +10,8 @@
     "InfoCommands": {
         "information": "{bot} is playing in {guilds} guilds, with {channels} channels and {users} users. Online for {uptime}, with {commands} commands.",
         "ping_response": "I'm alive! Response time: {}ms."
+    },
+    "AdminCommands": {
+        "eval_reset": "Eval environment reset."
     }
 }
