@@ -5,6 +5,7 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
+import traceback
 from datetime import datetime
 from typing import Dict, Any
 
@@ -38,9 +39,13 @@ class PrefixGetter:
         """
         cog = bot.get_cog("PrefixStore")
         if cog:
-            prefix = cog.get(message)
-            if asyncio.iscoroutine(prefix):
-                prefix = await prefix
+            try:
+                prefix = cog.get(message)
+                if asyncio.iscoroutine(prefix):
+                    prefix = await prefix
+            except Exception as e:
+                traceback.print_exc()
+                prefix = None
 
         if not isinstance(prefix, str):
             prefix = self._default
@@ -65,10 +70,13 @@ async def get_locale(bot, ctx: commands.Context):
     cog = bot.get_cog("LocaleStore")
 
     if cog:
-        ret = cog.get(ctx)
-        if asyncio.iscoroutine(ret):
-            ret = await ret
-        return ret
+        try:
+            ret = cog.get(ctx)
+            if asyncio.iscoroutine(ret):
+                ret = await ret
+            return ret
+        except Exception as e:
+                traceback.print_exc()
 
 
 class NestClient(commands.AutoShardedBot):
