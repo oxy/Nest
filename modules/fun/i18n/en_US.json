@@ -4,10 +4,31 @@
         "not_a_comic": "Error: {num} is not a comic on {comic}."
     },
     "RandomCommands": {
-	"heads": "Heads!",
-	"tails": "Tails!",
-	"roll_result": "You rolled a `{score}/{maxscore}`.",
-	"rating": "Birb rates `{content}` a {rating}/10."
+        "heads": "Heads!",
+        "tails": "Tails!",
+        "roll_result": "You rolled a `{score}/{maxscore}`.",
+        "rating": "Birb rates `{content}` a {rating}/10.",
+        "8ball": [
+            "That it is certain.",
+            "That it is decidedly so.",
+            "That there is without a doubt.",
+            "Yes, definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Most likely.",
+            "The outlook's good.",
+            "Yes.",
+            "Signs point to yes.",
+            "Reply hazy, try again.",
+            "Ask again later.",
+            "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and ask again.",
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no.",
+            "Outlook not so good.",
+            "Very doubtful."
+        ]
     }
 }
-

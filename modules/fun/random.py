@@ -27,10 +27,12 @@ class RandomCommands(commands.Cog):
         maxscore = times*num
         score = random.randint(times, maxscore)
         await ctx.send(ctx._("roll_result").format(score=score, maxscore=maxscore))
-        
 
     @commands.command()
     async def rate(self, ctx, *, content: str):
         num = random.randint(0, 10)
         await ctx.send(ctx._("rating").format(content=content, rating=num))
 
+    @commands.command(name="8ball")
+    async def eightball(self, ctx):
+        await ctx.send(random.choice(ctx._("8ball")))
