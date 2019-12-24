@@ -5,6 +5,7 @@ RNG commands.
 import random
 from discord.ext import commands
 
+AAA = ("a", "A")
 
 class RandomCommands(commands.Cog):    
     @commands.command(aliases=["coinflip"])
@@ -42,3 +43,10 @@ class RandomCommands(commands.Cog):
         Asks the magic 8ball a question.
         """
         await ctx.send(random.choice(ctx._("8ball")))
+
+    @commands.command(aliases=("aa", "aaa"))
+    async def a(self, ctx):
+        """
+        AAAAAAA!
+        """
+        await ctx.send(random.choice(AAA) * random.randint(1, 200))
