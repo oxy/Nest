@@ -30,9 +30,15 @@ class RandomCommands(commands.Cog):
 
     @commands.command()
     async def rate(self, ctx, *, content: str):
+        """
+        Gives something a rating.
+        """
         num = random.randint(0, 10)
         await ctx.send(ctx._("rating").format(content=content, rating=num))
 
     @commands.command(name="8ball")
     async def eightball(self, ctx):
+        """
+        Asks the magic 8ball a question.
+        """
         await ctx.send(random.choice(ctx._("8ball")))
