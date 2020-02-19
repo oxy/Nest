@@ -7,7 +7,7 @@ from discord.ext import commands
 
 AAA = ("a", "A")
 
-class RandomCommands(commands.Cog):    
+class RandomCommands(commands.Cog):
     @commands.command(aliases=["coinflip"])
     async def coin(self, ctx):
         """
