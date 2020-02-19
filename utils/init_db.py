@@ -12,6 +12,9 @@ SQL_TABLECREATE = "CREATE TABLE IF NOT EXISTS {table} (id BIGINT PRIMARY KEY);"
 
 
 def buildqueries():
+    """
+    Load fields and types from module configurations and build database queries.
+    """
     data = {}
     queries = []
 
@@ -42,6 +45,9 @@ def buildqueries():
 
 
 async def runqueries(*queries: str):
+    """
+    Run all database queries using asyncpg.
+    """
     pool = await asyncpg.create_pool(database="nest")
 
     async with pool.acquire() as conn:
@@ -50,6 +56,9 @@ async def runqueries(*queries: str):
 
 
 def main():
+    """
+    Run as a script.
+    """
     queries = buildqueries()
     print("Queries are: ", *queries, sep="\n")
 
