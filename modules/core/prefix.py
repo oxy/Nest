@@ -10,7 +10,7 @@ class PrefixManager(commands.Cog):
         await ctx.send(ctx._("current_prefix").format(prefix=ctx.prefix))
 
     @commands.command()
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(manage_guild=True)
     @commands.guild_only()
     async def setprefix(self, ctx, prefix: str):
         """
