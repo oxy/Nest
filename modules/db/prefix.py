@@ -1,6 +1,3 @@
-from typing import Dict
-
-import asyncpg
 import discord
 from discord.ext import commands
 

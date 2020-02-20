@@ -2,7 +2,6 @@
 Basic moderation utilities for Birb.
 """
 
-import discord
 from discord.ext import commands
 
 MOD_EMOTICONS = {

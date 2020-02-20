@@ -7,7 +7,7 @@ import functools
 import logging
 import traceback
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict
 
 import aiohttp
 import discord
@@ -76,7 +76,7 @@ async def get_locale(bot, ctx: commands.Context):
                 ret = await ret
             return ret
         except Exception as e:
-                traceback.print_exc()
+            traceback.print_exc()
 
 
 class NestClient(commands.AutoShardedBot):
