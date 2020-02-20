@@ -52,6 +52,7 @@ def gen_command(service: str):
 class _NSFWCommands:
     def __init__(self, bot):
         self.client = nsfw_dl.NSFWDL(session=bot.session, loop=bot.loop)
+        self.client.async_ = True
 
 for sv in SERVICES:
     setattr(_NSFWCommands, sv, gen_command(sv))
