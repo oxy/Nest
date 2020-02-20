@@ -23,7 +23,7 @@ class CommandLogger(commands.Cog):
         async with self._db.pool.acquire() as conn:
             await conn.execute(
                 """
-                INSERT INTO command (id, command, message, user, guild) VALUES ($1, $2, $3, $4, $5)
+                INSERT INTO command (id, command, message, author, guild) VALUES ($1, $2, $3, $4, $5)
                 """,
                 ctx.message.id,
                 ctx.command.name,

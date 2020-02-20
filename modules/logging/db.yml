@@ -1,5 +1,5 @@
 command:
   command: text
   message: text
-  user: bigint
+  author: bigint
   guild: bigint
