@@ -55,5 +55,6 @@ class PrefixStore(commands.Cog):
                     ON CONFLICT (id) DO UPDATE
                         SET (id, prefix) = ($1, $2);
                 """,
-                (ctx.guild.id, prefix),
+                ctx.guild.id,
+                prefix,
             )
