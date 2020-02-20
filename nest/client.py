@@ -47,7 +47,9 @@ class PrefixGetter:
                 traceback.print_exc()
                 prefix = None
 
-        if not isinstance(prefix, str):
+            if not isinstance(prefix, str):
+                prefix = self._default
+        else:
             prefix = self._default
 
         return commands.when_mentioned_or(prefix)(bot, message)
