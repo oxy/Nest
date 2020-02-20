@@ -29,15 +29,18 @@ def gen_command(service: str):
     """
     Generates a command helper.
     """
-    service_arg = service.capitalize() + 'Search'
-
     @commands.is_nsfw()
     @commands.command()
     @wrap_fn(service, f"Search {service} for images.")
-    async def nsfwsearch(self, ctx, *, query):
+    async def nsfwsearch(self, ctx, *, query: str = ""):
         """
         NSFW search utility command, common for every library.
         """
+        service_arg = service.capitalize()
+        if query:
+            service_arg += 'Search'
+        else:
+            service_arg += 'Random'
         try:
             content = await self.client.download(service_arg, args=query)
         except nsfw_dl.errors.NoResultsFound:
