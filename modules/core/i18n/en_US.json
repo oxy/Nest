@@ -5,6 +5,7 @@
         "locale_invalid": "**{}** is not a valid locale."
     },
     "PrefixManager": {
+        "current_prefix": "The bot's current prefix is `{prefix}`.",
         "prefix_set_success": "Successfully set prefix to {prefix}."
     },
     "InfoCommands": {
