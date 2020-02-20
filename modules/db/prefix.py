@@ -25,8 +25,8 @@ class PrefixStore(commands.Cog):
 
         Returns
         -------
-        Dict[str, str]
-            Dictionary of prefixes per category.
+        str
+            Prefix set by guild, if any.
         """
         if message.guild:
             async with self._db.pool.acquire() as conn:
@@ -44,8 +44,8 @@ class PrefixStore(commands.Cog):
         ----------
         ctx: commands.Context
             The context to set prefix for.
-        data: Dict[str, str]
-            Dictionary of prefixes.
+        prefix: str
+            Prefix to set.
         """
         if not ctx.guild:
             return
@@ -58,5 +58,5 @@ class PrefixStore(commands.Cog):
                     ON CONFLICT (id) DO UPDATE
                         SET (id, prefix) = ($1, $2);
                 """,
-                ctx.guild.id,
+                (ctx.guild.id, prefix),
             )
