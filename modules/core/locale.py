@@ -1,12 +1,13 @@
 """
 Provides core user-facing features, such as ping.
 """
-
-import time
 from discord.ext import commands
 
 
 class LocaleManager(commands.Cog):
+    """
+    Commands to manage bot locale.
+    """
     @commands.group()
     async def locale(self, ctx) -> None:
         """List locales and get current locale."""
