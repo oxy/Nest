@@ -13,7 +13,8 @@
         "ping_response": "I'm alive! Response time: {}ms."
     },
     "AdminCommands": {
-        "eval_reset": "Eval environment reset."
+        "eval_reset": "Eval environment reset.",
+        "eval_too_large": "Message was too large to send on Discord, uploading to Hastebin failed."
     },
     "ErrorHandler": {
         "cooldown": "This command is on a cooldown for `{}` seconds.",

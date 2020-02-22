@@ -91,7 +91,9 @@ async def func(env):
             await ctx.send(message)
         except discord.HTTPException:
             async with ctx.bot.session.post(HASTE_POST_URL, data=message) as resp:
-                # TODO: handle error, raise WebAPIException
+                if not resp.status == 200:
+                    await ctx.send(ctx._("eval_too_large"))
+                    return
                 data = await resp.json()
 
             await ctx.send(HASTE_URL.format(key=data["key"]))
