@@ -46,7 +46,7 @@ class AdminCommands(commands.Cog):
 f"""
 async def func(env):
     try:
-        {textwrap.indent(code, ' '*8)}
+{textwrap.indent(code, ' '*8)}
     finally:
         env.update(locals())
 """
@@ -74,7 +74,7 @@ async def func(env):
             first_line = f'{prefix}{lines[0]}'
             rest = '\n'.join(lines[1:])
             rest = textwrap.indent(rest, '...: '.rjust(len(prefix)))
-            in_ = 'In [{}]: {}\n{}'.format(count, first_line, rest)
+            in_ = "\n".join([first_line, rest])
 
         message = '```py\n{}'.format(in_)
         ms = int(round((after - before) * 1000))
