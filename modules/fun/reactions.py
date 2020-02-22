@@ -1,3 +1,7 @@
+"""
+Provide reaction images.
+"""
+
 import discord
 from discord.ext import commands
 
@@ -22,17 +26,13 @@ CATEGORIES = (
 
 
 def gen_command(category: str):
-    """
-    Generates a command.
-    """
+    """Generates a command."""
 
     @commands.command(
         name=category, help=f"Show a random anime {category} image.",
     )
     async def image(self, ctx):
-        """[)
-        Image search command, common for all categories.
-        """
+        """Image search command, common for all categories."""
         async with ctx.bot.session.get(
             WEEBSH_API, params={"type": category}, headers=self._headers
         ) as resp:
@@ -55,6 +55,8 @@ def gen_command(category: str):
 
 
 class _ReactionImages:
+    """Internal class that holds commands."""
+
     def __init__(self, bot):
         self._headers = {"Authorization": bot.tokens["weebsh"]}
 
@@ -64,4 +66,4 @@ for c in CATEGORIES:
 
 
 class ReactionImages(_ReactionImages, commands.Cog):
-    pass
+    """Reaction images provided by weeb.sh."""

@@ -1,3 +1,7 @@
+"""
+Provide random images from various APIs.
+"""
+
 from urllib.parse import urlparse
 
 import discord
@@ -23,9 +27,7 @@ TEXT = {"birb": "https://random.birb.pw/img/"}
 
 
 def gen_command(service: str, url: str, key: str):
-    """
-    Generates a command helper.
-    """
+    """Helper to generate a command."""
 
     @commands.command(
         name=service,
@@ -33,9 +35,8 @@ def gen_command(service: str, url: str, key: str):
         help=f"Search {service} for images.",
     )
     async def image(self, ctx):
-        """
-        Image search command, common for all APIs.
-        """
+        """Image search command, common for all APIs."""
+
         async with ctx.bot.session.get(url) as resp:
             if not resp.status == 200:
                 raise exceptions.WebAPIInvalidResponse(
@@ -58,11 +59,12 @@ def gen_command(service: str, url: str, key: str):
 
 
 class _RandomImages:
+    """Hidden base class."""
+
     @commands.command(aliases=["inspirobot", "inspire"])
     async def inspiro(self, ctx):
-        """
-        Generates a random inspiring image for you!
-        """
+        """Generates a random inspiring image for you!"""
+
         async with ctx.bot.session.get(INSPIROBOT_URL) as resp:
             if resp.status != 200:
                 raise exceptions.WebAPIInvalidResponse(
@@ -84,4 +86,4 @@ for sv, params in SERVICES.items():
 
 
 class RandomImages(_RandomImages, commands.Cog):
-    pass
+    """Provide random images from various online services."""

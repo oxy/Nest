@@ -8,7 +8,10 @@ from .images import RandomImages
 from .random import RandomCommands
 from .reactions import ReactionImages
 
+
 def setup(bot):
+    """Setup cogs."""
+
     bot.add_cog(DeveloperFun())
     bot.add_cog(Comics())
     bot.add_cog(RandomImages())

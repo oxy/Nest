@@ -11,11 +11,11 @@ WHATTHECOMMIT_API_URL = "http://whatthecommit.com/index.json"
 
 
 class DeveloperFun(commands.Cog):
+    """Developer humor (or lack thereof)."""
+
     @commands.command()
     async def fakegit(self, ctx):
-        """
-        Generates a fake commit message like a Discord webhook otherwise would.
-        """
+        """Generates a fake commit message like a Discord webhook otherwise would."""
 
         async with ctx.bot.session.get(WHATTHECOMMIT_API_URL) as resp:
             if resp.status != 200:

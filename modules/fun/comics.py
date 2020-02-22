@@ -9,11 +9,11 @@ from nest import exceptions
 
 
 class Comics(commands.Cog):
+    """Display comics from various online webcomics."""
+
     @commands.command()
     async def xkcd(self, ctx, number: int = None):
-        """
-        Grabs a (or the latest) comic from xkcd and shows it.
-        """
+        """Display a (or the latest) comic from xkcd."""
 
         if number:
             url = f"https://xkcd.com/{number}/info.0.json"
@@ -27,7 +27,9 @@ class Comics(commands.Cog):
                 )
 
             if resp.status == 404:
-                await ctx.send(ctx._("not_a_comic").format(num=number, comic="XKCD"))
+                await ctx.send(
+                    ctx._("not_a_comic").format(num=number, comic="XKCD")
+                )
                 return
 
             data = await resp.json()
