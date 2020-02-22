@@ -79,8 +79,8 @@ class _RandomImages:
         await ctx.send(embed=embed)
 
 
-for sv, data in SERVICES.items():
-    setattr(_RandomImages, sv, gen_command(sv, data[0], data[1]))
+for sv, params in SERVICES.items():
+    setattr(_RandomImages, sv, gen_command(sv, *params))
 
 
 class RandomImages(_RandomImages, commands.Cog):
