@@ -14,5 +14,14 @@
     },
     "AdminCommands": {
         "eval_reset": "Eval environment reset."
+    },
+    "ErrorHandler": {
+        "cooldown": "This command is on a cooldown for `{}` seconds.",
+        "disabled": "This command has been disabled",
+        "invalid_response": "Error: Got status code `{status}` from {api}.",
+        "missing_arg": "Missing required argument `{}`.",
+        "no_results": "No results found on {api} for `{q}`.",
+        "unreachable": "Error: Could not reach {api}.",
+        "unknown_error": "Unknown error in command:\n{}"
     }
 }

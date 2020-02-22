@@ -185,29 +185,6 @@ class NestClient(commands.AutoShardedBot):
         self.load_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
-    async def on_command_error(self, ctx, exception):
-        """
-        Handle an exception raised by a command.
-        Handle expected exceptions first, then log to console.
-
-        Parameters
-        ----------
-        ctx:
-            Context in which the exception occured.
-        exception:
-            The CommandInvokeError that was raised.
-        """
-
-        exc = exception.original
-        for etype, lstr in exceptions.EXC_I18N_MAP.items():
-            if isinstance(exc, etype):
-                await ctx.send(
-                    ctx._(lstr, cog="errors").format(**exc.__dict__)
-                )
-                return
-
-        await super().on_command_error(ctx, exception)
-
     def reload_module(self, name: str):
         """Loads a module from the modules directory.
 

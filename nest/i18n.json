@@ -14,11 +14,6 @@
             "hours": "hours",
             "minute": "minute",
             "minutes": "minutes"
-        },
-        "errors": {
-            "no_results": "No results found on {api} for `{q}`.",
-            "invalid_response": "Error: Got status code `{status}` from {api}.",
-            "unreachable": "Error: Could not reach {api}."
         }
     },
     "fr_FR": {
