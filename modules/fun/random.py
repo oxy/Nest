@@ -43,7 +43,7 @@ class RandomCommands(commands.Cog):
         """Asks the magic 8ball a question."""
         await ctx.send(random.choice(ctx._("8ball")))
 
-    @commands.command(aliases=("a", "aaa"))
+    @commands.command(aliases=("a", "aa"))
     async def aaa(self, ctx):
         """AAAAAAA!"""
         await ctx.send(random.choice(AAA) * random.randint(1, 200))
