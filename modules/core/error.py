@@ -43,6 +43,9 @@ class ErrorHandler(commands.Cog):
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(ctx._("missing_arg").format(error.param.name))
 
+        elif isinstance(error, commands.NSFWChannelRequired):
+            await ctx.send(ctx._("nsfw_required"))
+
         elif etype in nest.exceptions.EXC_I18N_MAP:
             await ctx.send(
                 ctx._(nest.exceptions.EXC_I18N_MAP[etype]).format(**error.__dict__)
