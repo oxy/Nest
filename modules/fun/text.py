@@ -34,7 +34,8 @@ class TextManipulation(commands.Cog):
     @commands.command()
     async def xd(self, ctx, *, word: str):
         """Make an XD out of the word given."""
-        await ctx.send(XD.format(word), embed=self._create_embed(ctx.author))
+
+        await ctx.send(XD.format(word=word), embed=self._create_embed(ctx.author))
 
     @commands.command()
     async def clapify(self, ctx, *, text: str):
