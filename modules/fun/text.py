@@ -1,6 +1,7 @@
 """
 Commands for fun text manipulation.
 """
+import random
 import string
 
 import discord
@@ -45,5 +46,9 @@ class TextManipulation(commands.Cog):
 
     @commands.command()
     async def tobleflep(self, ctx):
-        pass
+        """Tableflip, but random."""
+
+        tableflip = list("(╯°□°）╯︵ ┻━┻")
+        random.shuffle(tableflip)
+        await ctx.send(str(tableflip))
 
