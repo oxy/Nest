@@ -20,22 +20,25 @@ class AdminCommands(commands.Cog):
     @commands.is_owner()
     @commands.group()
     async def module(self, ctx):
-        pass
-        
+        """Group command for modules."""
+
     @module.command()
     async def reload(self, ctx, module: str):
+        """Reload a module."""
         ctx.bot.reload_module(module)
         await ctx.send(f"Successfully reloaded {module}!")
-    
+
     @commands.is_owner()
     @module.command()
     async def load(self, ctx, module: str):
+        """Load a module."""
         ctx.bot.load_module(module)
         await ctx.send(f"Successfully loaded {module}!")
 
     @commands.is_owner()
     @commands.command(usage='<code>')
     async def eval(self, ctx, *, code: str):
+        """Evaluate some code."""
         await ctx.trigger_typing()
         env = self._eval['env']
         env.update({'ctx': ctx})
