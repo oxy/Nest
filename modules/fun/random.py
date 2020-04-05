@@ -13,14 +13,14 @@ class RandomCommands(commands.Cog):
 
     @commands.command(aliases=["coinflip"])
     async def coin(self, ctx):
-        """Flips a coin randomly and gives you the result."""
+        """Flip a coin."""
 
         choice = random.choice(["heads", "tails"])
         await ctx.send(ctx._(choice))
 
     @commands.command(aliases=["diceroll"])
     async def dice(self, ctx, diceroll: str = "1d6"):
-        """Rolls a die wiithh input in the AdX notation."""
+        """Roll a die wiith input in the AdX notation."""
 
         times, num = diceroll.split("d")
         times = int(times) if times else 1

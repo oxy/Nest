@@ -63,7 +63,7 @@ class _RandomImages:
 
     @commands.command(aliases=["inspirobot", "inspire"])
     async def inspiro(self, ctx):
-        """Generates a random inspiring image for you!"""
+        """Generate a random image from Inspirobot."""
 
         async with ctx.bot.session.get(INSPIROBOT_URL) as resp:
             if resp.status != 200:

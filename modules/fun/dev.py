@@ -15,7 +15,7 @@ class DeveloperFun(commands.Cog):
 
     @commands.command()
     async def fakegit(self, ctx):
-        """Generates a fake commit message like a Discord webhook otherwise would."""
+        """Generate a fake commit message that looks like a Discord webhook."""
 
         async with ctx.bot.session.get(WHATTHECOMMIT_API_URL) as resp:
             if resp.status != 200:
