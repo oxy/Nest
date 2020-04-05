@@ -211,7 +211,7 @@ class NestClient(commands.AutoShardedBot):
     def run(self, bot: bool = True):
         """
         Start running the bot.
-        
+
         Parameters
         ----------
         bot: bool

@@ -41,6 +41,7 @@ class TextManipulation(commands.Cog):
     @commands.command()
     async def clapify(self, ctx, *, text: str):
         """Add clap emojis after each word."""
+
         res = " 👏 ".join(text.split())
         await ctx.send(res, embed=self._create_embed(ctx.author))
 
