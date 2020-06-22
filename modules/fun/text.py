@@ -51,5 +51,5 @@ class TextManipulation(commands.Cog):
 
         tableflip = list("(╯°□°）╯︵ ┻━┻")
         random.shuffle(tableflip)
-        await ctx.send(str(tableflip))
+        await ctx.send("".join(tableflip))
 
