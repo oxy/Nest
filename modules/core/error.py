@@ -26,6 +26,10 @@ class ErrorHandler(commands.Cog):
             The CommandInvokeError that was raised.
         """
 
+        if not hasattr(ctx, '_'):
+            traceback.print_exception(type(error), error, error.__traceback__)
+            return
+
         ctx._ = functools.partial(ctx._, cog="ErrorHandler")
         error = getattr(error, 'original', error)
         etype = type(error)
