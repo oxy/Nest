@@ -1,0 +1,23 @@
+{
+    "LanguageCommands": {
+        "english": "English",
+        "definition": "Definition",
+        "example": "Example",
+        "upvotes": "Upvotes",
+        "downvotes": "Downvotes"
+    },
+    "Kitsu": {
+        "rating": "Rating",
+        "status": "Status",
+        "startdate": "Started",
+        "enddate": "Finished"
+    },
+    "PackageLookups": {
+        "license": "License", 
+        "docs_url": "Documentation",
+        "home_page": "Website",
+        "homepage": "Website",
+        "author": "Author",
+        "requires_python": "Requires Python"
+    }
+}

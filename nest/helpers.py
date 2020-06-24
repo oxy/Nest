@@ -31,3 +31,30 @@ def dictwalk(dictionary: dict, tree: List[str], fill: bool = False):
                 raise KeyError(f"{k} not a valid key.")
         item = item[k]
     return item
+
+
+def smart_truncate(content: str, length: int = 400, suffix: str = "..") -> str:
+    """
+    Truncates a string to `...` where necessary
+
+    Parameters
+    ----------
+    content: str
+        String to truncate.
+    length: int
+        Length to truncate to.
+    suffix: str = ".."
+        String to suffix with.
+
+    Returns
+    -------
+    str:
+        Truncated string.
+    """
+
+    if len(content) >= length:
+        content = content[:length]
+        content = content.rsplit("\n", 1)[0]  # Cut to nearest paragraph.
+        content = content.rsplit(".", 1)[0] + "."  # Cut to nearest sentence.
+        content += suffix
+    return content

@@ -6,7 +6,11 @@ import logging
 import os
 from typing import Dict
 
+from dateutil.relativedelta import relativedelta
+
 from nest.helpers import dictwalk
+
+TIME_UNITS = ["years", "months", "days", "hours", "minutes", "seconds"]
 
 
 class I18n:
@@ -121,3 +125,21 @@ class I18n:
     def is_locale(self, locale: str):
         """Check if given locale is valid."""
         return locale in self._i18n_data.keys()
+
+    def format_timedelta(self, locale: str, delta: relativedelta):
+        """Format a delta to a string."""
+        res = ""
+        time = [delta.__dict__[unit] for unit in TIME_UNITS]
+
+        for unit, value in zip(TIME_UNITS, time):
+            value = abs(value)
+            if value == 0:
+                continue
+            if value == 1:
+                unit = unit[:-1]
+            unit_tr = self.getstr(unit, locale=locale, cog="time")
+            if res:
+                res += ", "
+            res += f"{str(value)} {unit_tr}"
+
+        return res

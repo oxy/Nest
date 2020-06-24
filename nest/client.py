@@ -5,7 +5,9 @@ Provides the Nest client class.
 import asyncio
 import functools
 import logging
-from typing import List, Optional
+import traceback
+from datetime import datetime
+from typing import Dict
 
 import aiohttp
 import discord
@@ -15,49 +17,98 @@ from discord.ext.commands.view import StringView
 from nest import i18n, exceptions
 
 
+class PrefixGetter:
+    def __init__(self, default: str):
+        self._default = default
+
+    async def __call__(self, bot, message: discord.Message):
+        """|coro|
+
+        Retrieves the prefix the bot is listening to
+        with the message as a context.
+
+        Parameters
+        -----------
+        ctx: :class:`commands.Context`
+            The context to get the prefix of.
+
+        Returns
+        --------
+        Dict[str, str]
+            A prefix the bot is listening for in each category.
+        """
+        cog = bot.get_cog("PrefixStore")
+        if cog:
+            try:
+                prefix = cog.get(message)
+                if asyncio.iscoroutine(prefix):
+                    prefix = await prefix
+            except Exception as e:
+                traceback.print_exc()
+                prefix = None
+
+            if not isinstance(prefix, str):
+                prefix = self._default
+        else:
+            prefix = self._default
+
+        return commands.when_mentioned_or(prefix)(bot, message)
+
+async def get_locale(bot, ctx: commands.Context):
+    """|coro|
+
+    Retrieves the locale of a user to respond with.
+
+    Parameters
+    -----------
+    ctx: :class:`commands.Context`
+        The context to get the prefix of.
+
+    Returns
+    -------
+    str:
+        Locale to use in responses.
+    """
+    cog = bot.get_cog("LocaleStore")
+
+    if cog:
+        try:
+            ret = cog.get(ctx)
+            if asyncio.iscoroutine(ret):
+                ret = await ret
+            return ret
+        except Exception as e:
+            traceback.print_exc()
+
+
 class NestClient(commands.AutoShardedBot):
     """Main client for Nest.
 
     Attributes
     ----------
-    database: nest.db.DBWrapper
-        The wrapper for the database.
     session: aiohttp.ClientSession
         aiohttp session to use for making requests.
-    owners: list
-        List of owners of the bot.
+    tokens: Dict[str, str]
+        Tokens passed to the bot.
+    created: datetime.datetime()
+        Time when bot instance was initialised.
     i18n: nest.i18n.I18n
         Internationalization functions for the bot.
     """
 
-    def __init__(
-        self,
-        *,
-        database: Optional[str] = None,
-        locale: str,
-        prefix: str,
-        owners: List[int],
-    ):
-        super().__init__(prefix)
+    def __init__(self, **options):
+        super().__init__(
+            PrefixGetter(options.pop("prefix")),
+            **options,
+        )
         self._logger = logging.getLogger("NestClient")
-        self.features = set()
-        self.providers = {}
-
-        if database:
-            import asyncpg
-
-            self.database = self.loop.run_until_complete(
-                asyncpg.create_pool(database=database, loop=self.loop)
-            )
-            self.features.add("database")
-        else:
-            self.database = None
-
+        self.tokens: Dict[str, str] = options.pop("tokens", {})
+        self.owner_ids = set(options.pop("owners", []))
+        self.created = datetime.now()
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-        self.locale = locale
-        self.owners = owners
-        self.i18n = i18n.I18n(locale="en_US")
+        self.i18n = i18n.I18n(locale=options.pop("locale", "en_US"))
+        self.options = options
 
     async def on_ready(self):
         """Log successful login event"""
@@ -68,71 +119,9 @@ class NestClient(commands.AutoShardedBot):
         # Set the game.
         await self.change_presence(activity=discord.Activity(name="with code"))
 
-    async def get_prefix(self, message: discord.Message):
-        """|coro|
-
-        Retrieves the prefix the bot is listening to
-        with the message as a context.
-
-        Parameters
-        -----------
-        message: :class:`discord.Message`
-            The message context to get the prefix of.
-
-        Raises
-        --------
-        :exc:`.ClientException`
-            The prefix was invalid. This could be if the prefix
-            function returned None, the prefix list returned no
-            elements that aren't None, or the prefix string is
-            empty.
-
-        Returns
-        --------
-        Dict[str, str]
-            A prefix the bot is listening for in each category.
-        """
-        prefixes = self.command_prefix
-        provider = self.providers.get("prefix", None)
-
-        ret = None
-        if provider:
-            ret = provider(self, message)
-            if asyncio.iscoroutine(ret):
-                ret = await ret
-            if ret is not None:
-                prefixes.update(ret)
-
-        return prefixes
-
-    async def get_locale(self, user: discord.User):
-        """|coro|
-
-        Retrieves the locale of a user to respond with.
-
-        Parameters
-        -----------
-        user: :class:`discord.User`
-            The message context to get the prefix of.
-
-        Returns
-        -------
-        str:
-            Locale to use in responses.
-        """
-        provider = self.providers.get("locale", None)
-
-        ret = None
-        if provider:
-            ret = provider(self, user)
-            if asyncio.iscoroutine(ret):
-                ret = await ret
-
-        return ret if ret else self.locale
-
     async def get_context(
         self, message: discord.Message, *, cls=commands.Context
-    ):
+    ) -> commands.Context:
         """|coro|
 
         Returns the invocation context from the message.
@@ -158,38 +147,18 @@ class NestClient(commands.AutoShardedBot):
             The invocation context. The type of this can change via the
             ``cls`` parameter.
         """
-
-        view = StringView(message.content)
-        ctx = cls(prefix=None, view=view, bot=self, message=message)
-
-        ctx.prefixes = await self.get_prefix(message)
-
-        for category, prefix in ctx.prefixes.items():
-            if view.skip_string(prefix):
-                invoker = view.get_word()
-                command = self.all_commands.get(invoker)
-                if command and command.instance.category == category:
-                    ctx.command = command
-                    ctx.invoked_with = invoker
-                    ctx.prefix = prefix
-                break
-
-        ctx.locale = await self.get_locale(message.author)
+        ctx = await super().get_context(message, cls=cls)
 
         if ctx.command:
+            user_locale = await get_locale(self, ctx)
+            ctx.locale = user_locale if user_locale else self.i18n.locale
             ctx._ = functools.partial(
                 self.i18n.getstr,
                 locale=ctx.locale,
-                cog=type(ctx.command.instance).__name__,
+                cog=ctx.command.cog_name,
             )
 
         return ctx
-
-    async def is_owner(self, user: discord.User) -> bool:
-        if user.id in self.owners:
-            return True
-        else:
-            raise commands.NotOwner
 
     def load_module(self, name: str):
         """Loads a module from the modules directory.
@@ -216,64 +185,36 @@ class NestClient(commands.AutoShardedBot):
         self.load_extension(f"modules.{name}")
         self.i18n.load_module(name)
 
-    def add_cog(self, cog):
-        """Adds a "cog" to the bot.
+    def reload_module(self, name: str):
+        """Loads a module from the modules directory.
 
-        A cog is a class that has its own event listeners and commands.
-
-        They are meant as a way to organize multiple relevant commands
-        into a singular class that shares some state or no state at all.
-
-        The cog can have a ``requires`` list to list out any required
-        features, and a ``provides`` dict that can provide functions to the bot.
-
-        The cog can also have a ``__global_check`` member function that allows
-        you to define a global check. See :meth:`.check` for more info. If
-        the name is ``__global_check_once`` then it's equivalent to the
-        :meth:`.check_once` decorator.
-
-        More information will be documented soon.
+        A module is a d.py extension that contains commands, cogs, or
+        listeners and i18n data.
 
         Parameters
-        -----------
-        cog
-            The cog to register to the bot.
+        ----------
+        name: str
+            The extension name to load. It must be a valid name of a folder
+            within the modules directory.
+
+        Raises
+        ------
+        ClientException
+            The extension does not have a setup function.
+        ImportError
+            The extension could not be imported.
         """
-        required = getattr(cog, "requires", [])
-        unavailable = set(required) - self.features
-        if unavailable:
-            raise exceptions.MissingFeatures(cog, unavailable)
-        super().add_cog(cog)
 
-        provides = getattr(cog, "provides", None)
-        if provides:
-            self.providers.update(cog.provides)
+        self.reload_extension(f"modules.{name}")
+        self.i18n.load_module(name)
 
-    def remove_cog(self, name):
-        """Removes a cog from the bot.
-
-        All registered commands, event listeners and providers that the
-        cog has registered will be removed as well.
-
-        If no cog is found then this method has no effect.
-
-        If the cog defines a special member function named ``__unload``
-        then it is called when removal has completed. This function
-        **cannot** be a coroutine. It must be a regular function.
+    def run(self, bot: bool = True):
+        """
+        Start running the bot.
 
         Parameters
-        -----------
-        name : str
-            The name of the cog to remove.
+        ----------
+        bot: bool
+            If bot is a bot account or a selfbot.
         """
-
-        cog = self.cogs.pop(name, None)
-        if not cog:
-            return
-
-        provides = getattr(cog, "provides", {})
-        for key, provider in provides.items():
-            assert self.providers[key] is provider
-            self.providers.pop(key)
-
-        super().remove_cog(name)
+        super().run(self.tokens["discord"], bot=bot)

@@ -1,0 +1,5 @@
+command:
+  command: text
+  message: text
+  author: bigint
+  guild: bigint

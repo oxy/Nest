@@ -1,5 +1,10 @@
 {
-    "CoreCommands": {
+    "LocaleManager": {
+        "locale": "Votre locale est **{}**.",
+        "locale_success": "Votre locale est **{}**.",
+        "locale_invalid": "**{}** n'est pas une locale valide."
+    },
+    "InfoCommands": {
         "ping_response": "Je suis vivant! Temps de réponse: {}ms."
     }
 }

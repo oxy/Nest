@@ -1,20 +1,19 @@
 """
-Provides core features, such as ping.
+Provides core bot functionality and settings management.
 """
-import time
-from discord.ext import commands
 
-
-class CoreCommands:
-    category = "user"
-
-    @commands.command()
-    async def ping(self, ctx):
-        pre_typing = time.monotonic()
-        await ctx.trigger_typing()
-        latency = int(round((time.monotonic() - pre_typing) * 1000))
-        await ctx.send(ctx._("ping_response").format(latency))
-
+from .info import InfoCommands
+from .admin import AdminCommands
+from .prefix import PrefixManager 
+from .locale import LocaleManager
+from .error import ErrorHandler
 
 def setup(bot):
-    bot.add_cog(CoreCommands())
+    bot.add_cog(InfoCommands())
+    bot.add_cog(AdminCommands())
+    bot.add_cog(ErrorHandler())
+
+    if bot.get_cog("PrefixStore"):
+        bot.add_cog(PrefixManager())
+    if bot.get_cog("LocaleStore"):
+        bot.add_cog(LocaleManager())

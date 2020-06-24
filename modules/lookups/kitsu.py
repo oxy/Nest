@@ -4,13 +4,13 @@ from discord.ext import commands
 from nest import exceptions
 
 FIELDS = {
-    "rating": "averageRating", "status": "status", "started": "startDate"
+    "rating": "averageRating",
+    "status": "status",
+    "started": "startDate",
 }
 
 
-class KitsuWrapper:
-    category = "user"
-
+class Kitsu(commands.Cog):
     @commands.command(aliases=["manga", "anime"])
     async def kitsu(self, ctx, *, name: str):
         """
@@ -28,7 +28,7 @@ class KitsuWrapper:
             data = await resp.json(content_type="application/vnd.api+json")
 
         if not data["meta"]["count"]:
-            raise exceptions.WebAPINoResults(api="kitsu")
+            raise exceptions.WebAPINoResults(api="kitsu", q=name)
 
         attributes = data["data"][0]["attributes"]
 
@@ -46,7 +46,3 @@ class KitsuWrapper:
 
         embed.set_thumbnail(url=attributes["posterImage"]["original"])
         await ctx.send(embed=embed)
-
-
-def setup(bot):
-    bot.add_cog(KitsuWrapper())

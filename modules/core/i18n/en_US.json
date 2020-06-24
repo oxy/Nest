@@ -1,5 +1,29 @@
 {
-    "CoreCommands": {
+    "LocaleManager": {
+        "locale": "Your locale is **{}**.",
+        "locale_success": "Your locale is now **{}**.",
+        "locale_invalid": "**{}** is not a valid locale."
+    },
+    "PrefixManager": {
+        "current_prefix": "The bot's current prefix is `{prefix}`.",
+        "prefix_set_success": "Successfully set prefix to {prefix}."
+    },
+    "InfoCommands": {
+        "information": "{bot} is playing in {guilds} guilds, with {channels} channels and {users} users. Online for {uptime}, with {commands} commands.",
         "ping_response": "I'm alive! Response time: {}ms."
+    },
+    "AdminCommands": {
+        "eval_reset": "Eval environment reset.",
+        "eval_too_large": "Message was too large to send on Discord, uploading to Hastebin failed."
+    },
+    "ErrorHandler": {
+        "cooldown": "This command is on a cooldown for `{}` seconds.",
+        "disabled": "This command has been disabled",
+        "invalid_response": "Error: Got status code `{status}` from {api}.",
+        "missing_arg": "Missing required argument `{}`.",
+        "nsfw_required": "Command requires NSFW channel.",
+        "no_results": "No results found on {api} for `{q}`.",
+        "unreachable": "Error: Could not reach {api}.",
+        "unknown_error": "Unknown error in command:\n{}"
     }
 }
