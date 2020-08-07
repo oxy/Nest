@@ -10,7 +10,7 @@ from discord.ext import commands
 from nest import exceptions
 
 SERVICES = {
-    "dog": ("https://random.dog/woof.json", "url"),
+    "dog": ("https://random.dog/woof.json?filter=mp4", "url"),
     "birb": ("https://random.birb.pw/tweet.json", "file"),
     "cat": ("https://nekos.life/api/v2/img/meow", "url"),
 }
