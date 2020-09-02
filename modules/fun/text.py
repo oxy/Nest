@@ -25,7 +25,7 @@ class TextManipulation(commands.Cog):
         return embed
 
     @commands.command()
-    async def bigtext(self, ctx, *, text: str):
+    async def bigtext(self, ctx, *, text: commands.clean_content):
         """Convert text into huge emoji."""
 
         table = str.maketrans({x: f":regional_indicator_{x.lower()}:" for x in string.ascii_letters})
@@ -33,13 +33,13 @@ class TextManipulation(commands.Cog):
         await ctx.send(res, embed=self._create_embed(ctx.author))
 
     @commands.command()
-    async def xd(self, ctx, *, word: str):
+    async def xd(self, ctx, *, word: commands.clean_content):
         """Make an XD out of the word given."""
 
         await ctx.send(XD.format(word=word), embed=self._create_embed(ctx.author))
 
     @commands.command()
-    async def clapify(self, ctx, *, text: str):
+    async def clapify(self, ctx, *, text: commands.clean_content):
         """Add clap emojis after each word."""
 
         res = " 👏 ".join(text.split())
